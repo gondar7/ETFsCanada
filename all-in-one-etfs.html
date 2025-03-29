@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare All-in-One ETFs | ETFsCanada.ca</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <style>
+        /* (Keep all styles from previous version) */
+        .etf-group h3 { font-size: 1.4rem; color: var(--primary-color); margin-top: 2rem; margin-bottom: 1rem; padding-bottom: 0.3rem; border-bottom: 2px solid var(--light-grey); }
+        .etf-selection-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: flex-start; margin-left:0;}
+        .etf-select-item { background-color: var(--light-grey); padding: 8px 15px; border-radius: 20px; cursor: pointer; border: 1px solid var(--border-color); transition: background-color 0.3s, border-color 0.3s, color 0.3s, transform 0.2s ease; font-size: 0.9rem; display: flex; align-items: center;}
+        .etf-select-item:hover { border-color: var(--secondary-color); transform: translateY(-2px); }
+        .etf-select-item input[type="checkbox"] { margin-right: 8px; accent-color: var(--primary-color); cursor: pointer; }
+        .etf-select-item label { cursor: pointer; user-select: none; }
+        .etf-select-item.selected { background-color: var(--primary-color); color: white; border-color: var(--primary-color); transform: translateY(-2px) scale(1.03); }
+        #selection-message { text-align: center; margin-top: 1.5rem; color: #dc3545; font-weight: 600; display: none; }
+        #comparison-area { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color); opacity: 0; transition: opacity 0.6s ease-out, transform 0.6s ease-out; min-height: 300px; border-radius: 10px; background-color: var(--light-grey); padding: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        #comparison-area.visible { opacity: 1; transform: translateY(0); }
+        #comparison-area > h2 { text-align: center; border-bottom: none; margin-bottom: 2rem; }
+        .comparison-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; align-items: start; margin-bottom: 2rem;}
+        .comparison-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.1); padding: 1.5rem 2rem; color: var(--text-color); height: 100%;}
+        @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) { .comparison-card { background-color: #ffffff; } }
+        .comparison-card h3 { margin-top: 0; color: var(--primary-color); border-bottom: 3px solid var(--accent-color); padding-bottom: 0.6rem; margin-bottom: 1.5rem; text-align: center; font-size: 1.4rem; }
+        .comparison-card h3 a { color: inherit; }
+        .comparison-card h3 a:hover { color: var(--secondary-color); text-decoration: underline;}
+        .comparison-card ul { list-style: none; padding: 0; margin: 0; }
+        .comparison-card li { margin-bottom: 0.8rem; font-size: 1rem; display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-color); padding-bottom: 0.5rem; align-items: center;}
+        .comparison-card li strong { font-weight: 600; color: var(--primary-color); margin-right: 10px; flex-shrink: 0; }
+        .comparison-card li span { text-align: right; word-break: break-word; }
+        .comparison-card li span.lowest-mer { color: #28a745; font-weight: 700; }
+        .comparison-card li span.lowest-mer::after { content: " (Lowest)"; font-size: 0.8em; font-style: italic; margin-left: 4px; color: #28a745;}
+        .comparison-card li span.highest-mer { color: #dc3545; font-weight: 700; }
+        .comparison-card li span.highest-mer::after { content: " (Highest)"; font-size: 0.8em; font-style: italic; margin-left: 4px; color: #dc3545;}
+        .comparison-card h4 { font-size: 1.1rem; color: var(--primary-color); margin-top: 1.5rem; margin-bottom: 0.5rem; padding-bottom: 0.2rem; border-bottom: 1px solid var(--light-grey); }
+        .comparison-card .top-holdings-list { list-style: decimal inside; padding-left: 0; margin-top: 0.5rem; font-size: 0.9em; }
+        .comparison-card .top-holdings-list li { border-bottom: none; margin-bottom: 0.4rem; padding-bottom: 0; display: list-item; text-align: left; justify-content: flex-start; font-size: inherit; }
+        .chart-wrapper { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 10px; padding: 1.5rem; margin-top: 2rem; box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.3);}
+        @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) { .chart-wrapper { background-color: #ffffff; } }
+        .chart-wrapper h3 { margin-top: 0; text-align: center; color: var(--primary-color); border-bottom: none; margin-bottom: 1.5rem;}
+        .chart-container { max-width: 100%; margin: 1rem auto; position: relative; }
+        #mer-comparison-chart-container .chart-container { height: 200px; }
+        #geo-comparison-chart-container .chart-container { height: 350px; }
+        #sector-comparison-chart-container .chart-container { height: 350px; }
+        canvas { animation: fadeIn 1s ease-out; }
+     </style>
+</head>
+<body>
+
+     <header class="hero" style="min-height: 30vh; padding: 4rem 1rem;">
+        <div class="hero-content">
+            <h1 style="font-size: 3rem;">All-in-One <span class="tooltip" data-tooltip="Exchange-Traded Fund: A type of investment fund traded on stock exchanges.">ETFs</span></h1>
+            <p style="font-size: 1.1rem;">Globally Diversified Portfolios in a Single Fund</p>
+        </div>
+    </header>
+
+      <nav class="sticky-nav">
+         <ul>
+             <li><a href="index.html">Home</a></li>
+            <li><a href="all-in-one-etfs.html">All-in-One</a></li>
+            <li><a href="regions.html">Regions</a></li>
+            <li><a href="sectors.html">Sectors</a></li>
+            <li><a href="fixed-income.html">Fixed Income</a></li>
+            <li><a href="factor.html">Factor</a></li>
+            <li><a href="thematic.html">Thematic</a></li>
+            <li><a href="commodities.html">Commodities</a></li>
+            <li><a href="crypto.html">Crypto</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="intro">
+            <h2>Understanding All-in-One <span class="tooltip" data-tooltip="Exchange-Traded Funds: Funds holding baskets of securities, traded on exchanges.">ETFs</span></h2>
+            <p>
+                All-in-One ETFs (also known as <span class="tooltip" data-tooltip="Asset Allocation refers to the strategy of dividing investments among different asset categories like stocks, bonds, and cash.">Asset Allocation</span> ETFs) are designed to be a complete, diversified portfolio within a single fund purchase. They automatically hold a mix of stocks (<span class="tooltip" data-tooltip="Equities represent ownership (shares) in companies.">equities</span>) and bonds (<span class="tooltip" data-tooltip="Fixed Income securities, like bonds, represent debt investments paying regular interest.">fixed income</span>) from Canada, the US, and international markets, tailored to a specific risk profile. These ETFs simplify investing significantly by handling the complexities of <span class="tooltip" data-tooltip="Diversification means spreading investments across various assets to reduce risk.">diversification</span> and <span class="tooltip" data-tooltip="Rebalancing involves periodically adjusting portfolio weights back to their original targets.">rebalancing</span> for you, making them a very popular choice for investors pursuing long-term goals. The primary difference lies in their equity/bond allocation, which determines their risk level.
+            </p>
+             <p class="data-date">Comparison data requires verification. Data As Of: March 28, 2025. Always verify with official provider documents.</p>
+       </section>
+
+        <section id="etf-selector">
+            <h2>Select ETFs to Compare (Max 3)</h2>
+            <p>Choose from the popular All-in-One ETFs below. Comparisons will appear automatically when you select 2 or 3.</p>
+            <div class="etf-group"><h3>All Equity (~100%)</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="VEQT"> VEQT (Vanguard)</label></li><li class="etf-select-item"><label><input type="checkbox" value="XEQT"> XEQT (iShares)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZEQT"> ZEQT (BMO)</label></li><li class="etf-select-item"><label><input type="checkbox" value="HEQT"> HEQT (Horizons)</label></li><li class="etf-select-item"><label><input type="checkbox" value="FEQT"> FEQT (Fidelity)</label></li></ul></div>
+            <div class="etf-group"><h3>Growth (~80% Equity)</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="VGRO"> VGRO (Vanguard)</label></li><li class="etf-select-item"><label><input type="checkbox" value="XGRO"> XGRO (iShares)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZGRO"> ZGRO (BMO)</label></li><li class="etf-select-item"><label><input type="checkbox" value="HGRO"> HGRO (Horizons)</label></li><li class="etf-select-item"><label><input type="checkbox" value="FGRO"> FGRO (Fidelity)</label></li></ul></div>
+            <div class="etf-group"><h3>Balanced (~60% Equity)</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="VBAL"> VBAL (Vanguard)</label></li><li class="etf-select-item"><label><input type="checkbox" value="XBAL"> XBAL (iShares)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZBAL"> ZBAL (BMO)</label></li><li class="etf-select-item"><label><input type="checkbox" value="HBAL"> HBAL (Horizons)</label></li><li class="etf-select-item"><label><input type="checkbox" value="FBAL"> FBAL (Fidelity)</label></li></ul></div>
+            <div class="etf-group"><h3>Conservative (~40% Equity)</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="VCNS"> VCNS (Vanguard)</label></li><li class="etf-select-item"><label><input type="checkbox" value="XCNS"> XCNS (iShares)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZCON"> ZCON (BMO)</label></li><li class="etf-select-item"><label><input type="checkbox" value="HCON"> HCON (Horizons)</label></li><li class="etf-select-item"><label><input type="checkbox" value="FCNS"> FCNS (Fidelity)</label></li></ul></div>
+            <p id="selection-message"></p>
+        </section>
+
+        <section id="comparison-area">
+            <h2 style="text-align: center;">Side-by-Side Comparison</h2>
+            <div id="comparison-output">
+                </div>
+        </section>
+
+        <section id="summary">
+             <h2>Key Differences & Considerations</h2>
+            <p>
+                While superficially similar, these All-in-One ETFs have important distinctions beyond just their equity/bond mix. When choosing, consider:
+            </p>
+            <ul>
+                <li>
+                    <strong>Cost (<span class="tooltip" data-tooltip="Management Expense Ratio: Annual fee including taxes and operating expenses.">MER</span>):</strong> This is a direct drag on returns. While all are relatively low-cost, there are differences.
+                    iShares (XEQT/XGRO/XBAL/XCNS) and BMO (ZEQT/ZGRO/ZBAL/ZCON) typically offer the lowest MERs in the ~0.20% range for their standard suites.
+                    Vanguard (VEQT/VGRO/VBAL/VCNS) is slightly higher at ~0.24%.
+                    Fidelity (FEQT/FGRO/FBAL/FCNS) has noticeably higher MERs (~0.39-0.43%) reflecting their different underlying strategy (factor ETFs) and inclusion of crypto.
+                    Horizons' swap-based ETFs (HGRO/HBAL/HCON) boast the lowest advertised MERs (~0.17-0.19%), but total cost includes less transparent swap fees and potential tracking differences; HEQT's MER (~0.20%) is comparable to others as it holds ETFs directly.
+                    <em>Lower MERs generally lead to better net returns over the long term, all else being equal.</em>
+                </li>
+                <li>
+                    <strong>Underlying Strategy & Holdings:</strong>
+                    Vanguard, iShares, and BMO primarily use broad, market-cap-weighted underlying ETFs for geographic exposure. This is the standard passive approach.
+                    Fidelity utilizes its suite of "Factor ETFs" which tilt towards specific characteristics like Value, Momentum, Quality, and Low Volatility, aiming to outperform the market over time (but may also underperform). This is a "smart beta" strategy.
+                    Horizons uses <span class="tooltip" data-tooltip="Total Return Swap: Derivative structure for tax efficiency. See below.">Total Return Swaps</span> for HCON/HBAL/HGRO, synthetically replicating index returns. HEQT holds underlying ETFs (including swap-based ones like HXQ for Nasdaq).
+                    <em>Consider if you prefer pure market exposure or a factor-tilted approach.</em>
+                </li>
+                 <li>
+                    <strong>Geographic Allocation Tilts:</strong> Although aiming for global diversification, the exact weights differ slightly. For example, Vanguard funds (VEQT/VGRO/VBAL/VCNS) currently have a higher allocation to Canadian equities (~30% of equity) compared to iShares/BMO (~24-25%). This "home bias" can be preferred by some but reduces global diversification slightly. Check the Geographic Allocation chart in the comparison for specific weights.
+                </li>
+                 <li>
+                    <strong>Unique Features (Fidelity Crypto):</strong> Fidelity's suite uniquely includes a small (~1-3%) allocation to a Bitcoin ETF (FBTC). This offers direct crypto exposure within the All-in-One wrapper, which may appeal to some investors but also adds a distinct source of volatility and risk not present in the other providers' offerings.
+                </li>
+                 <li>
+                    <strong>Structure & Tax Efficiency (Horizons Swaps):</strong> The swap structure used by HCON, HBAL, and HGRO avoids taxable distributions, instead converting growth into deferred capital gains realized only upon selling. This can be highly advantageous in **non-registered taxable accounts**. However, it introduces <span class="tooltip" data-tooltip="Counterparty Risk: The risk that the other party in a financial contract (the swap counterparty, usually a bank) will default on its obligations. Mitigated by collateral but not zero.">counterparty risk</span> and potential for tracking error to differ from physically-backed ETFs. HEQT does not use this swap structure for the overall fund, though some underlying holdings might.
+                 </li>
+                 <li>
+                    <strong>Provider Ecosystem & Liquidity:</strong> All these providers are major players. While slight differences in <span class="tooltip" data-tooltip="Assets Under Management: Indicates fund size and popularity. Higher AUM often correlates with better liquidity and tighter bid-ask spreads.">AUM</span> exist, all these core allocation ETFs are highly liquid with tight bid-ask spreads, making trading easy. Some investors prefer sticking within one provider's ecosystem.
+                 </li>
+                 <li>
+                     <strong>Automatic Rebalancing:</strong> A key benefit of all these ETFs is they automatically rebalance back to their target equity/bond weights, saving you the time and effort of doing it yourself.
+                 </li>
+            </ul>
+            <p>
+                The "best" choice depends on your individual priorities regarding cost, underlying investment strategy (market cap vs. factor), specific allocations (home bias, crypto), tax situation (registered vs. non-registered for swaps), and preferred provider. **Always review the official ETF Facts document before investing.**
+            </p>
+         </section>
+
+         <p class="disclaimer">
+             <strong>Disclaimer:</strong> Data requires verification. Information is for informational purposes only and not financial advice. Verify all details with official provider documents before investing. Data As Of: March 28, 2025.
+        </p>
+    </main>
+
+     <footer>
+         <p>&copy; ETFsCanada.ca 2025 | Data manually collected, verify with source.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

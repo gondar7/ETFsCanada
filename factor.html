@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Factor / Smart Beta ETFs in Canada | ETFsCanada.ca</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <style>
+        /* (Keep all styles from style.css) */
+        /* Add minor refinements if needed */
+         .etf-group h3 { font-size: 1.4rem; color: var(--primary-color); margin-top: 2rem; margin-bottom: 1rem; padding-bottom: 0.3rem; border-bottom: 2px solid var(--light-grey); }
+         .etf-selection-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: flex-start; margin-left:0;}
+         .etf-select-item { background-color: var(--light-grey); padding: 8px 15px; border-radius: 20px; cursor: pointer; border: 1px solid var(--border-color); transition: background-color 0.3s, border-color 0.3s, color 0.3s, transform 0.2s ease; font-size: 0.9rem; display: flex; align-items: center;}
+         .etf-select-item:hover { border-color: var(--secondary-color); transform: translateY(-2px); }
+         .etf-select-item input[type="checkbox"] { margin-right: 8px; accent-color: var(--primary-color); cursor: pointer; }
+         .etf-select-item label { cursor: pointer; user-select: none; }
+         .etf-select-item.selected { background-color: var(--primary-color); color: white; border-color: var(--primary-color); transform: translateY(-2px) scale(1.03); }
+         #selection-message, #us-selection-message { text-align: center; margin-top: 1.5rem; color: #dc3545; font-weight: 600; display: none; } /* Shared style */
+         #comparison-area, #us-comparison-area { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color); opacity: 0; transition: opacity 0.6s ease-out, transform 0.6s ease-out; min-height: 200px; /* Reduced min height */ border-radius: 10px; background-color: var(--light-grey); padding: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+         #comparison-area.visible, #us-comparison-area.visible { opacity: 1; transform: translateY(0); }
+         #comparison-area > h2, #us-comparison-area > h2 { text-align: center; border-bottom: none; margin-bottom: 2rem; }
+         .comparison-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; align-items: start; margin-bottom: 2rem;} /* Reduced minmax slightly */
+         .comparison-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.1); padding: 1.5rem 1.5rem; /* Slightly reduced padding */ color: var(--text-color); height: 100%;}
+         @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) { .comparison-card { background-color: #ffffff; } }
+         .comparison-card h3 { margin-top: 0; color: var(--primary-color); border-bottom: 3px solid var(--accent-color); padding-bottom: 0.6rem; margin-bottom: 1.5rem; text-align: center; font-size: 1.3rem; /* Slightly smaller */ }
+         .comparison-card h3 a { color: inherit; }
+         .comparison-card h3 a:hover { color: var(--secondary-color); text-decoration: underline;}
+         .comparison-card ul { list-style: none; padding: 0; margin: 0; }
+         .comparison-card li { margin-bottom: 0.7rem; font-size: 0.95rem; /* Slightly smaller */ display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-color); padding-bottom: 0.5rem; align-items: center;}
+         .comparison-card li strong { font-weight: 600; color: var(--primary-color); margin-right: 8px; flex-shrink: 0; }
+         .comparison-card li span { text-align: right; word-break: break-word; }
+         .comparison-card li span.lowest-mer { color: #28a745; font-weight: 700; }
+         .comparison-card li span.lowest-mer::after { content: " (Lowest)"; font-size: 0.8em; font-style: italic; margin-left: 4px; color: #28a745;}
+         .comparison-card li span.highest-mer { color: #dc3545; font-weight: 700; }
+         .comparison-card li span.highest-mer::after { content: " (Highest)"; font-size: 0.8em; font-style: italic; margin-left: 4px; color: #dc3545;}
+         .comparison-card h4 { font-size: 1rem; color: var(--primary-color); margin-top: 1.2rem; margin-bottom: 0.4rem; padding-bottom: 0.2rem; border-bottom: 1px solid var(--light-grey); }
+         .comparison-card .top-holdings-list { list-style: decimal inside; padding-left: 0; margin-top: 0.5rem; font-size: 0.85em; }
+         .comparison-card .top-holdings-list li { border-bottom: none; margin-bottom: 0.3rem; padding-bottom: 0; display: list-item; text-align: left; justify-content: flex-start; font-size: inherit; }
+         .chart-wrapper { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 10px; padding: 1.5rem; margin-top: 2rem; box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.3);}
+         @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) { .chart-wrapper { background-color: #ffffff; } }
+         .chart-wrapper h3 { margin-top: 0; text-align: center; color: var(--primary-color); border-bottom: none; margin-bottom: 1.5rem;}
+         .chart-container { max-width: 100%; margin: 1rem auto; position: relative; }
+         /* Only MER chart used for factor/US comparison */
+         #mer-comparison-chart-container .chart-container, #us-mer-comparison-chart-container .chart-container { height: 200px; }
+         #geo-comparison-chart-container, #sector-comparison-chart-container { display: none; } /* Hide by default */
+         #us-geo-comparison-chart-container, #us-sector-comparison-chart-container { display: none; } /* Hide US versions too */
+         canvas { animation: fadeIn 1s ease-out; }
+         section#us-alternatives ul {list-style: disc; margin-left: 20px; padding-left: 10px;} /* Style lists in US section */
+         section#us-alternatives li {margin-bottom: 0.75rem;}
+     </style>
+</head>
+<body>
+
+     <header class="hero" style="min-height: 30vh; padding: 4rem 1rem;">
+        <div class="hero-content">
+             <h1 style="font-size: 3rem;">Factor / Smart Beta <span class="tooltip" data-tooltip="Exchange-Traded Fund: A type of investment fund traded on stock exchanges.">ETFs</span></h1>
+            <p style="font-size: 1.1rem;">Target Specific Investment Styles & Characteristics</p>
+        </div>
+    </header>
+
+      <nav class="sticky-nav">
+         <ul>
+             <li><a href="index.html">Home</a></li>
+            <li><a href="all-in-one-etfs.html">All-in-One</a></li>
+            <li><a href="regions.html">Regions</a></li>
+            <li><a href="sectors.html">Sectors</a></li>
+            <li><a href="fixed-income.html">Fixed Income</a></li>
+            <li><a href="factor.html">Factor</a></li>
+            <li><a href="thematic.html">Thematic</a></li>
+            <li><a href="commodities.html">Commodities</a></li>
+            <li><a href="crypto.html">Crypto</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="intro">
+            <h2>Understanding Factor Investing</h2>
+            <p>Factor investing, sometimes called "Smart Beta," moves beyond traditional market-cap weighted indexing. It involves targeting specific, historically documented drivers of return known as 'factors'. The most common factors include:</p>
+            <ul>
+                <li><strong><span class="tooltip" data-tooltip="Value investing focuses on buying stocks that appear underpriced relative to their fundamental worth (e.g., low price-to-book, low price-to-earnings).">Value</span></strong></li>
+                <li><strong><span class="tooltip" data-tooltip="Momentum investing focuses on buying stocks that have shown strong recent price performance, assuming trends will continue.">Momentum</span></strong></li>
+                <li><strong><span class="tooltip" data-tooltip="Quality investing focuses on companies with strong balance sheets, stable earnings, high profitability, and good management.">Quality</span></strong></li>
+                <li><strong><span class="tooltip" data-tooltip="Low Volatility investing focuses on stocks that have historically exhibited lower price fluctuations than the overall market.">Low Volatility</span></strong></li>
+                <li><strong><span class="tooltip" data-tooltip="Size factor investing focuses on smaller companies (small-caps), which historically have sometimes provided higher returns than large-caps, albeit with more risk.">Size</span></strong></li>
+                <li><strong>Multi-factor</strong> (combining several factors)</li>
+            </ul>
+             <p>The goal is often to achieve potentially higher risk-adjusted returns than traditional market-cap indexes over the long term. However, factors can go through long periods of underperformance, and factor ETFs may have higher <span class="tooltip" data-tooltip="Tracking Error: The difference between the performance of the ETF and the performance of the index or benchmark it aims to track.">tracking error</span> and fees compared to basic index funds.</p>
+             <p class="data-date">Comparison data requires verification. Data As Of: March 28, 2025. Always verify with official provider documents.</p>
+       </section>
+
+        <section id="etf-selector">
+            <h2>Select Canadian-Listed Factor ETFs to Compare (Max 3)</h2>
+            <p>Choose from ETFs targeting various factors available on Canadian exchanges.</p>
+            <div class="etf-group"><h3>Value</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XCV"> XCV (iShares Cda)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZVC"> ZVC (BMO Cda)</label></li><li class="etf-select-item"><label><input type="checkbox" value="VVL"> VVL (BMO US)</label></li></ul></div>
+            <div class="etf-group"><h3>Momentum</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XCM"> XCM (iShares Cda)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZCM"> ZCM (BMO Cda)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZUM"> ZUM (BMO US)</label></li></ul></div>
+            <div class="etf-group"><h3>Quality</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XCQ"> XCQ (iShares Cda)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZQC"> ZQC (BMO Cda)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZUQ"> ZUQ (BMO US)</label></li></ul></div>
+            <div class="etf-group"><h3>Low Volatility</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XMV"> XMV (iShares Cda)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZLB"> ZLB (BMO Cda)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZLU"> ZLU (BMO US)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZLE"> ZLE (BMO EAFE)</label></li></ul></div>
+            <div class="etf-group"><h3>Multi-Factor</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="PXC"> PXC (Invesco Cda RAFI)</label></li><li class="etf-select-item"><label><input type="checkbox" value="XFC"> XFC (iShares Cda)</label></li></ul></div>
+            <p id="selection-message" style="display: none;"></p>
+        </section>
+
+        <section id="comparison-area">
+            <h2 style="text-align: center;">Canadian Factor ETF Comparison</h2>
+            <div id="comparison-output">
+                </div>
+        </section>
+
+         <section id="summary">
+             <h2>Key Differences & Considerations (Canadian Factor ETFs)</h2>
+             <p>When comparing Canadian-listed Factor ETFs:</p><ul><li><strong>Factor Definition & Methodology:</strong> Crucial... RAFI weights by fundamentals... MSCI Edge factor indexes use specific metrics...</li><li><strong>Single vs. Multi-Factor:</strong> Some target one factor... others combine multiple...</li><li><strong>Cost (<span class="tooltip" data-tooltip="Management Expense Ratio: Annual fee.">MER</span>):</strong> Typically higher than broad market... compare carefully...</li><li><strong>Geographic Focus:</strong> Factor strategies applied across different regions...</li><li><strong>Tracking Error & Underperformance Risk:</strong> By definition, factor ETFs deviate... can underperform...</li><li><strong>Concentration:</strong> Some factor strategies can lead to concentration...</li></ul><p>Factor investing requires more research... Always check the ETF Facts document.</p>
+         </section>
+
+        <section id="us-alternatives">
+            <h2>Popular US-Listed Factor / Asset Allocation Alternatives</h2>
+            <p>
+                While this site focuses on ETFs easily accessible on Canadian exchanges, some highly regarded factor-oriented ETFs are domiciled in the US. Canadians *can* often purchase these through their brokers, but should be aware of additional complexities. Popular examples known for their academic grounding and factor focus include:
+            </p>
+            <ul>
+                <li><strong>Avantis ETFs (e.g., AVGE, AVGV, AVUV, AVDV):</strong> Utilize a systematic approach emphasizing Value, Profitability, and Size factors, often with lower fees than traditional active management. AVGE provides global multi-factor equity exposure.</li>
+                <li><strong>Dimensional Fund Advisors (DFA) ETFs (e.g., DFAW, DFAC, DFUS, DFIV):</strong> Pioneers in factor investing, systematically targeting Size, Value, and Profitability premiums based on academic research. DFAW offers global equity exposure.</li>
+            </ul>
+            <p><strong>Complexities for Canadians Holding US-Listed ETFs:</strong></p>
+            <ul>
+                <li><strong>Currency Conversion:</strong> You'll need to convert CAD to USD, incurring fees (unless using <span class="tooltip" data-tooltip="Norbert's Gambit: A technique using inter-listed stocks/ETFs to convert currency near the spot rate, avoiding high bank/broker fees. Adds steps and potential delays.">Norbert's Gambit</span>) and taking on currency fluctuation risk.</li>
+                <li><strong><span class="tooltip" data-tooltip="Withholding Tax on Distributions: Dividends paid by US ETFs to Canadians generally have a 15% US tax withheld. This tax is usually recoverable via foreign tax credits in taxable accounts, and often waived via treaty in RRSPs/LIRAs, but typically lost in TFSAs.">Withholding Taxes</span>:</strong> Dividends are subject to a 15% US withholding tax. This is generally recoverable in taxable accounts (via foreign tax credit) or often exempt in RRSPs/LIRAs due to tax treaties, but usually represents a drag on returns within a TFSA. Additional layers of withholding tax may apply to dividends from international stocks held *within* the US ETF.</li>
+                <li><strong>Reporting:</strong> Ensure you have a W-8BEN form filed with your broker to claim tax treaty benefits.</li>
+            </ul>
+            <p>
+                Due to these factors, many investors prefer Canadian-domiciled ETFs, especially for registered accounts. If considering US-listed ETFs, extensive research is recommended. Resources like the <a href="https://canadiancouchpotato.com/" target="_blank" rel="noopener noreferrer">Canadian Couch Potato blog</a>, <a href="https://www.pwlcapital.com/en/resources/" target="_blank" rel="noopener noreferrer">PWL Capital's resources</a>, and <a href="https://www.youtube.com/@BenFelixCSI" target="_blank" rel="noopener noreferrer">Ben Felix's YouTube channel</a> offer valuable insights for Canadian investors navigating these choices. </p>
+
+            <hr style="margin: 3rem 0; border: none; border-top: 1px solid var(--border-color);">
+             <div id="us-etf-selector">
+                 <h2 style="text-align:center">Compare US-Listed Alternatives (Max 3)</h2>
+                 <p style="text-align:center">Compare selected US-domiciled factor/asset allocation ETFs against each other.</p>
+                 <div class="etf-group">
+                     <h3>Select US ETFs:</h3>
+                     <ul class="etf-selection-list us-etf-selection-list"> <li class="etf-select-item"><label><input type="checkbox" class="us-etf-checkbox" value="AVGE"> AVGE (Avantis)</label></li>
+                         <li class="etf-select-item"><label><input type="checkbox" class="us-etf-checkbox" value="AVGV"> AVGV (Avantis)</label></li>
+                         <li class="etf-select-item"><label><input type="checkbox" class="us-etf-checkbox" value="DFAW"> DFAW (Dimensional)</label></li>
+                         </ul>
+                 </div>
+                 <p id="us-selection-message" style="display: none; text-align: center; margin-top: 1.5rem; color: #dc3545; font-weight: 600;"></p>
+             </div>
+
+             <section id="us-comparison-area" style="display: none;"> <h2 style="text-align: center;">US ETF Side-by-Side Comparison</h2>
+                <div id="us-comparison-output">
+                    </div>
+             </section>
+            </section>
+
+
+         <p class="disclaimer">
+             <strong>Disclaimer:</strong> Data requires verification... Verify all details... Mention of specific ETFs is for informational context only...
+        </p>
+    </main>
+
+     <footer>
+         <p>&copy; ETFsCanada.ca 2025 | Data manually collected, verify with source.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

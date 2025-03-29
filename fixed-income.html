@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Fixed Income (Bond) ETFs in Canada | ETFsCanada.ca</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <style>
+        /* (Keep all styles from style.css) */
+        /* Add any specific refinements for this page if needed */
+         .etf-group h3 { font-size: 1.4rem; color: var(--primary-color); margin-top: 2rem; margin-bottom: 1rem; padding-bottom: 0.3rem; border-bottom: 2px solid var(--light-grey); }
+         .etf-selection-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: flex-start; margin-left:0;}
+         .etf-select-item { background-color: var(--light-grey); padding: 8px 15px; border-radius: 20px; cursor: pointer; border: 1px solid var(--border-color); transition: background-color 0.3s, border-color 0.3s, color 0.3s, transform 0.2s ease; font-size: 0.9rem; display: flex; align-items: center;}
+         .etf-select-item:hover { border-color: var(--secondary-color); transform: translateY(-2px); }
+         .etf-select-item input[type="checkbox"] { margin-right: 8px; accent-color: var(--primary-color); cursor: pointer; }
+         .etf-select-item label { cursor: pointer; user-select: none; }
+         .etf-select-item.selected { background-color: var(--primary-color); color: white; border-color: var(--primary-color); transform: translateY(-2px) scale(1.03); }
+         #selection-message{ text-align: center; margin-top: 1.5rem; color: #dc3545; font-weight: 600; display: none; }
+         #comparison-area { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color); opacity: 0; transition: opacity 0.6s ease-out, transform 0.6s ease-out; min-height: 200px; border-radius: 10px; background-color: var(--light-grey); padding: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); display: none;}
+         #comparison-area.visible { opacity: 1; transform: translateY(0); display: block; }
+         #comparison-area > h2 { text-align: center; border-bottom: none; margin-bottom: 2rem; }
+         .comparison-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; align-items: stretch; margin-bottom: 2rem;}
+         .comparison-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: var(--card-shadow); padding: 1.5rem 1.5rem; color: var(--text-color); display: flex; flex-direction: column;}
+         @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) { .comparison-card { background-color: #ffffff; } }
+         .comparison-card h3 { margin-top: 0; color: var(--primary-color); border-bottom: 3px solid var(--accent-color); padding-bottom: 0.6rem; margin-bottom: 1.5rem; text-align: center; font-size: 1.3rem; }
+         .comparison-card h3 a { color: inherit; } .comparison-card h3 a:hover { color: var(--secondary-color); text-decoration: underline;}
+         .comparison-card ul { list-style: none; padding: 0; margin: 0; flex-grow: 1; }
+         .comparison-card li { margin-bottom: 0.7rem; font-size: 0.95rem; display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-color); padding-bottom: 0.5rem; align-items: center;}
+         .comparison-card li strong { font-weight: 600; color: var(--primary-color); margin-right: 8px; flex-shrink: 0; }
+         .comparison-card li span { text-align: right; word-break: break-word; }
+         .comparison-card li span.lowest-mer { color: #28a745; font-weight: 700; } .comparison-card li span.lowest-mer::after { content: " (Lowest)"; font-size: 0.8em; font-style: italic; margin-left: 4px; color: #28a745;}
+         .comparison-card li span.highest-mer { color: #dc3545; font-weight: 700; } .comparison-card li span.highest-mer::after { content: " (Highest)"; font-size: 0.8em; font-style: italic; margin-left: 4px; color: #dc3545;}
+         .comparison-card h4 { font-size: 1rem; color: var(--primary-color); margin-top: 1.2rem; margin-bottom: 0.4rem; padding-bottom: 0.2rem; border-bottom: 1px solid var(--light-grey); }
+         .comparison-card .top-holdings-list { list-style: decimal inside; padding-left: 0; margin-top: 0.5rem; font-size: 0.85em; } /* May not be used here */
+         .comparison-card .top-holdings-list li { border-bottom: none; margin-bottom: 0.3rem; padding-bottom: 0; display: list-item; text-align: left; justify-content: flex-start; font-size: inherit; }
+         .chart-wrapper { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 10px; padding: 1.5rem; margin-top: 2rem; box-shadow: var(--card-shadow); border: 1px solid rgba(255, 255, 255, 0.3); opacity: 0; animation: fadeInUp 0.6s ease-out forwards; }
+         @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) { .chart-wrapper { background-color: #ffffff; } }
+         .chart-wrapper h3 { margin-top: 0; text-align: center; color: var(--primary-color); border-bottom: none; margin-bottom: 1.5rem;}
+         .chart-container { max-width: 100%; margin: 1rem auto; position: relative; }
+         #mer-comparison-chart-container .chart-container { min-height: 200px; }
+         /* Geo/Sector charts hidden */
+         #geo-comparison-chart-container, #sector-comparison-chart-container { display: none; }
+         canvas { animation: fadeIn 1s ease-out; max-width: 100%; height: auto;}
+         .chart-unavailable, .chart-error { text-align:center; font-size: 0.9em; color: #888; padding: 2rem 0;} .chart-error { color: red; }
+     </style>
+</head>
+<body>
+
+     <header class="hero" style="min-height: 30vh; padding: 4rem 1rem;">
+        <div class="hero-content">
+            <h1 style="font-size: 3rem;">Fixed Income (Bond) <span class="tooltip" data-tooltip="Exchange-Traded Fund: A type of investment fund traded on stock exchanges.">ETFs</span></h1>
+            <p style="font-size: 1.1rem;">Compare Canadian Bond ETFs for Income and Stability</p>
+        </div>
+    </header>
+
+      <nav class="sticky-nav">
+         <ul>
+             <li><a href="index.html">Home</a></li>
+            <li><a href="all-in-one-etfs.html">All-in-One</a></li>
+            <li><a href="regions.html">Regions</a></li>
+            <li><a href="sectors.html">Sectors</a></li>
+            <li><a href="fixed-income.html">Fixed Income</a></li>
+            <li><a href="factor.html">Factor</a></li>
+            <li><a href="thematic.html">Thematic</a></li>
+            <li><a href="commodities.html">Commodity</a></li>
+            <li><a href="crypto.html">Crypto</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="intro">
+            <h2>Understanding Fixed Income ETFs</h2>
+            <p>
+                Fixed income ETFs primarily invest in bonds, which represent loans made to governments or corporations. They play a key role in many portfolios by providing potential income through interest payments and generally offering lower volatility compared to stocks, acting as a stabilizer.
+            </p>
+             <p>
+                 Key concepts to understand when comparing bond ETFs include:
+            </p>
+            <ul>
+                <li><strong><span class="tooltip" data-tooltip="Yield to Maturity (YTM) is the estimated total annual return if the bond is held until it matures, considering its current price, coupon payments, and face value. Distribution Yield reflects past payments. YTM is generally a better indicator for future expectations, but verify which yield is reported.">Yield:</span></strong> The return an investor can expect. Often quoted as Yield to Maturity (YTM) or Distribution Yield.</li>
+                <li><strong><span class="tooltip" data-tooltip="Duration (measured in years) indicates how much a bond ETF's price is likely to change for a 1% change in interest rates. Higher duration means higher sensitivity (more price fluctuation).">Duration:</span></strong> Measures sensitivity to interest rate changes. Higher duration means the price will fall more if rates rise (and rise more if rates fall).</li>
+                <li><strong><span class="tooltip" data-tooltip="Credit Quality reflects the borrower's creditworthiness (likelihood of repaying). Ratings range from AAA (highest) down to B or below (junk/high-yield). Lower quality means higher default risk but usually higher yield.">Credit Quality:</span></strong> The creditworthiness of the bond issuers (e.g., AAA, AA, A, BBB). Lower quality means higher risk but potentially higher yield.</li>
+                 <li><strong>Maturity:</strong> The length of time until the bonds in the portfolio are due to be repaid. Average maturity influences both yield and duration.</li>
+            </ul>
+            <p>
+                Different types of bond ETFs focus on specific segments of the market, offering varying levels of yield, interest rate risk, and credit risk.
+            </p>
+             <p class="data-date">Comparison data requires verification. Data As Of: March 29, 2025. Always verify with official provider documents.</p>
+       </section>
+
+        <section id="etf-selector">
+            <h2>Select Canadian-Listed Fixed Income ETFs to Compare (Max 3)</h2>
+            <p>Choose from ETFs covering different types of bonds.</p>
+            <div class="etf-group">
+                <h3>Aggregate Bond (Broad Market)</h3>
+                <ul class="etf-selection-list">
+                    <li class="etf-select-item"><label><input type="checkbox" value="VAB"> VAB (Vanguard)</label></li>
+                    <li class="etf-select-item"><label><input type="checkbox" value="XBB"> XBB (iShares)</label></li>
+                    <li class="etf-select-item"><label><input type="checkbox" value="ZAG"> ZAG (BMO)</label></li>
+                </ul>
+            </div>
+             <div class="etf-group">
+                <h3>Short-Term Bond</h3>
+                <ul class="etf-selection-list">
+                     <li class="etf-select-item"><label><input type="checkbox" value="VSB"> VSB (Vanguard)</label></li>
+                     <li class="etf-select-item"><label><input type="checkbox" value="XSB"> XSB (iShares)</label></li>
+                     <li class="etf-select-item"><label><input type="checkbox" value="ZSB"> ZSB (BMO)</label></li>
+                 </ul>
+            </div>
+             <div class="etf-group">
+                 <h3>Corporate Bond</h3>
+                <ul class="etf-selection-list">
+                     <li class="etf-select-item"><label><input type="checkbox" value="VCB"> VCB (Vanguard)</label></li>
+                     <li class="etf-select-item"><label><input type="checkbox" value="XCB"> XCB (iShares)</label></li>
+                     <li class="etf-select-item"><label><input type="checkbox" value="ZCB"> ZCB (BMO)</label></li>
+                 </ul>
+            </div>
+             <div class="etf-group">
+                 <h3>Government Bond</h3>
+                <ul class="etf-selection-list">
+                     <li class="etf-select-item"><label><input type="checkbox" value="VGV"> VGV (Vanguard Cda Gov)</label></li>
+                     <li class="etf-select-item"><label><input type="checkbox" value="XGB"> XGB (iShares Cda Gov)</label></li>
+                     <li class="etf-select-item"><label><input type="checkbox" value="ZGB"> ZGB (BMO Cda Gov)</label></li>
+                     </ul>
+            </div>
+             <div class="etf-group">
+                <h3>Real Return Bond</h3>
+                <ul class="etf-selection-list">
+                     <li class="etf-select-item"><label><input type="checkbox" value="XRB"> XRB (iShares)</label></li>
+                     <li class="etf-select-item"><label><input type="checkbox" value="ZRR"> ZRR (BMO)</label></li>
+                 </ul>
+            </div>
+             <div class="etf-group">
+                <h3>High Yield Bond</h3>
+                <ul class="etf-selection-list">
+                     <li class="etf-select-item"><label><input type="checkbox" value="XHY"> XHY (iShares)</label></li>
+                     <li class="etf-select-item"><label><input type="checkbox" value="ZHY"> ZHY (BMO)</label></li>
+                 </ul>
+            </div>
+            <div class="etf-group">
+                <h3>Global Bond (CAD Hedged)</h3>
+                <ul class="etf-selection-list">
+                     <li class="etf-select-item"><label><input type="checkbox" value="VBG"> VBG (Vanguard)</label></li>
+                     <li class="etf-select-item"><label><input type="checkbox" value="XAGG"> XAGG (iShares)</label></li>
+                     <li class="etf-select-item"><label><input type="checkbox" value="ZG G"> ZG G (BMO)</label></li> </ul>
+            </div>
+            <p id="selection-message" style="display: none;"></p>
+        </section>
+
+        <section id="comparison-area">
+            <h2 style="text-align: center;">Fixed Income ETF Comparison</h2>
+            <div id="comparison-output">
+                </div>
+        </section>
+
+         <section id="summary">
+             <h2>Key Differences & Considerations (Fixed Income ETFs)</h2>
+             <p>Choosing the right bond ETF involves balancing several factors:</p>
+             <ul>
+                <li><strong>Interest Rate Risk (Duration):</strong> Longer <span class="tooltip" data-tooltip="Duration measures sensitivity to interest rate changes. Higher duration = more price change for a given rate change.">duration</span> ETFs (like long government bonds) offer potentially higher yields but their prices fall much more when interest rates rise. Short-term bond ETFs have low duration and less price risk, but lower yields. Aggregate bond ETFs have moderate duration. Match duration to your interest rate outlook and risk tolerance.</li>
+                <li><strong>Credit Risk (Credit Quality):</strong> Government bonds (Federal) have minimal default risk but lower yields. Investment-grade corporate bonds offer higher yields but carry some default risk. High-yield ("junk") bonds offer the highest yields but come with significant default risk, behaving more like equities sometimes. Aggregate funds blend government and corporate bonds. Real Return Bonds have minimal credit risk (government issued).</li>
+                <li><strong>Yield vs. Safety:</strong> Generally, higher yield comes with higher risk (either longer duration or lower credit quality). Understand this trade-off. <span class="tooltip" data-tooltip="Yield to Maturity (YTM) estimates future return if held to maturity; Distribution Yield reflects past payments. Prefer YTM for comparison if available.">Yield to Maturity (YTM)</span> is usually a better comparison metric than distribution yield.</li>
+                <li><strong>Inflation Protection (Real Return Bonds):</strong> <span class="tooltip" data-tooltip="Real Return Bonds (RRBs): Government bonds whose principal and/or interest payments are adjusted for inflation, protecting purchasing power.">RRBs</span> are designed to protect against unexpected inflation, but their market can be less liquid and yields are typically lower in non-inflationary periods.</li>
+                 <li><strong>Diversification:</strong> Aggregate bond ETFs provide broad diversification across issuer types and maturities. Targeting specific types (like short-term or corporate) reduces diversification. Global bond ETFs add geographic diversification but involve currency hedging complexities and costs.</li>
+                <li><strong>Cost (<span class="tooltip" data-tooltip="Management Expense Ratio: Annual fee.">MER</span>):</strong> Fees matter, especially in the lower-return world of fixed income. Broad aggregate and government bond ETFs often have very low MERs, while specialized types like high-yield or global may be higher.</li>
+            </ul>
+             <p>Consider the role you want fixed income to play in your portfolio (e.g., capital preservation, income generation, diversification from equities) when selecting the appropriate type and specific ETF. Always check the ETF Facts document.</p>
+         </section>
+
+         <p class="disclaimer">
+             <strong>Disclaimer:</strong> Data requires verification. Information is for informational purposes only... Verify all details... Performance data is historical... Data As Of: March 29, 2025.
+        </p>
+    </main>
+
+     <footer>
+         <p>© ETFsCanada.ca 2025 | Data manually collected, verify with source. | Contact: <a href="mailto:shane@leedham.xyz">shane@leedham.xyz</a></p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Thematic ETFs in Canada | ETFsCanada.ca</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <style>
+        /* (Keep all styles from style.css) */
+        /* Add any specific refinements for this page if needed */
+         .etf-group h3 { font-size: 1.4rem; color: var(--primary-color); margin-top: 2rem; margin-bottom: 1rem; padding-bottom: 0.3rem; border-bottom: 2px solid var(--light-grey); }
+         .etf-selection-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: flex-start; margin-left:0;}
+         .etf-select-item { background-color: var(--light-grey); padding: 8px 15px; border-radius: 20px; cursor: pointer; border: 1px solid var(--border-color); transition: background-color 0.3s, border-color 0.3s, color 0.3s, transform 0.2s ease; font-size: 0.9rem; display: flex; align-items: center;}
+         .etf-select-item:hover { border-color: var(--secondary-color); transform: translateY(-2px); }
+         .etf-select-item input[type="checkbox"] { margin-right: 8px; accent-color: var(--primary-color); cursor: pointer; }
+         .etf-select-item label { cursor: pointer; user-select: none; }
+         .etf-select-item.selected { background-color: var(--primary-color); color: white; border-color: var(--primary-color); transform: translateY(-2px) scale(1.03); }
+         #selection-message{ text-align: center; margin-top: 1.5rem; color: #dc3545; font-weight: 600; display: none; }
+         #comparison-area { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color); opacity: 0; transition: opacity 0.6s ease-out, transform 0.6s ease-out; min-height: 200px; border-radius: 10px; background-color: var(--light-grey); padding: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); display: none;}
+         #comparison-area.visible { opacity: 1; transform: translateY(0); display: block; }
+         #comparison-area > h2 { text-align: center; border-bottom: none; margin-bottom: 2rem; }
+         .comparison-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; align-items: stretch; margin-bottom: 2rem;}
+         .comparison-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: var(--card-shadow); padding: 1.5rem 1.5rem; color: var(--text-color); display: flex; flex-direction: column;}
+         @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) { .comparison-card { background-color: #ffffff; } }
+         .comparison-card h3 { margin-top: 0; color: var(--primary-color); border-bottom: 3px solid var(--accent-color); padding-bottom: 0.6rem; margin-bottom: 1.5rem; text-align: center; font-size: 1.3rem; }
+         .comparison-card h3 a { color: inherit; } .comparison-card h3 a:hover { color: var(--secondary-color); text-decoration: underline;}
+         .comparison-card ul { list-style: none; padding: 0; margin: 0; flex-grow: 1; }
+         .comparison-card li { margin-bottom: 0.7rem; font-size: 0.95rem; display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-color); padding-bottom: 0.5rem; align-items: center;}
+         .comparison-card li strong { font-weight: 600; color: var(--primary-color); margin-right: 8px; flex-shrink: 0; }
+         .comparison-card li span { text-align: right; word-break: break-word; }
+         .comparison-card li span.lowest-mer { color: #28a745; font-weight: 700; } .comparison-card li span.lowest-mer::after { content: " (Lowest)"; font-size: 0.8em; font-style: italic; margin-left: 4px; color: #28a745;}
+         .comparison-card li span.highest-mer { color: #dc3545; font-weight: 700; } .comparison-card li span.highest-mer::after { content: " (Highest)"; font-size: 0.8em; font-style: italic; margin-left: 4px; color: #dc3545;}
+         .comparison-card h4 { font-size: 1rem; color: var(--primary-color); margin-top: 1.2rem; margin-bottom: 0.4rem; padding-bottom: 0.2rem; border-bottom: 1px solid var(--light-grey); }
+         .comparison-card .top-holdings-list { list-style: decimal inside; padding-left: 0; margin-top: 0.5rem; font-size: 0.85em; }
+         .comparison-card .top-holdings-list li { border-bottom: none; margin-bottom: 0.3rem; padding-bottom: 0; display: list-item; text-align: left; justify-content: flex-start; font-size: inherit; }
+         .chart-wrapper { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 10px; padding: 1.5rem; margin-top: 2rem; box-shadow: var(--card-shadow); border: 1px solid rgba(255, 255, 255, 0.3); opacity: 0; animation: fadeInUp 0.6s ease-out forwards; }
+         @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) { .chart-wrapper { background-color: #ffffff; } }
+         .chart-wrapper h3 { margin-top: 0; text-align: center; color: var(--primary-color); border-bottom: none; margin-bottom: 1.5rem;}
+         .chart-container { max-width: 100%; margin: 1rem auto; position: relative; }
+         #mer-comparison-chart-container .chart-container { min-height: 200px; }
+         #geo-comparison-chart-container .chart-container { min-height: 350px; }
+         #sector-comparison-chart-container .chart-container { min-height: 350px; }
+         canvas { animation: fadeIn 1s ease-out; max-width: 100%; height: auto;}
+         .chart-unavailable, .chart-error { text-align:center; font-size: 0.9em; color: #888; padding: 2rem 0;} .chart-error { color: red; }
+     </style>
+</head>
+<body>
+
+     <header class="hero" style="min-height: 30vh; padding: 4rem 1rem;">
+        <div class="hero-content">
+            <h1 style="font-size: 3rem;">Thematic <span class="tooltip" data-tooltip="Exchange-Traded Fund: A type of investment fund traded on stock exchanges.">ETFs</span></h1>
+            <p style="font-size: 1.1rem;">Invest in Long-Term Trends and Disruptive Technologies</p>
+        </div>
+    </header>
+
+      <nav class="sticky-nav">
+         <ul>
+             <li><a href="index.html">Home</a></li>
+            <li><a href="all-in-one-etfs.html">All-in-One</a></li>
+            <li><a href="regions.html">Regions</a></li>
+            <li><a href="sectors.html">Sectors</a></li>
+            <li><a href="fixed-income.html">Fixed Income</a></li>
+            <li><a href="factor.html">Factor</a></li>
+            <li><a href="thematic.html">Thematic</a></li>
+            <li><a href="commodities.html">Commodity</a></li>
+            <li><a href="crypto.html">Crypto</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="intro">
+            <h2>Understanding Thematic Investing</h2>
+            <p>
+                Thematic ETFs aim to capture growth opportunities by investing in companies expected to benefit from long-term, structural trends known as <span class="tooltip" data-tooltip="Megatrends: Profound, long-term shifts in society, economy, or environment (e.g., AI, aging population, climate change).">megatrends</span>. These can range from technological breakthroughs (like AI, robotics, genomics) to environmental shifts (clean energy, carbon reduction) or societal changes (future of food, longevity).
+            </p>
+             <p>
+                 Unlike traditional sector or broad market ETFs, thematic funds often have very concentrated portfolios focused on specific niches. They may follow custom-built indexes or be actively managed.
+             </p>
+            <p>
+                <strong>Potential vs. Risks:</strong> The appeal lies in potentially high growth if the chosen theme plays out successfully. However, thematic investing carries significant risks:
+            </p>
+            <ul>
+                <li><strong>High Volatility & <span class="tooltip" data-tooltip="Concentration Risk: The risk of amplified losses due to having a large portion of investments in a single company, industry, or theme.">Concentration Risk</span>:</strong> Performance is heavily tied to the success of a narrow theme and often a small number of companies.</li>
+                <li><strong>Theme Persistence Risk:</strong> A theme might be hyped but fail to materialize as expected, or it could become obsolete due to new innovations.</li>
+                <li><strong>Valuation Risk:</strong> Popular themes can lead to companies trading at very high valuations, increasing downside potential.</li>
+                <li><strong>High <span class="tooltip" data-tooltip="Management Expense Ratio: Annual fee. Thematic ETFs often have much higher MERs than broad index funds.">MERs</span>:</strong> Fees are often considerably higher than broad market or even basic sector ETFs.</li>
+                <li><strong>Methodology & Definition:** How a theme is defined and which companies are included can vary greatly between providers. Always examine the ETF's strategy and holdings closely.</li>
+            </ul>
+             <p class="data-date">Comparison data requires verification. Data As Of: March 29, 2025. Always verify with official provider documents.</p>
+       </section>
+
+        <section id="etf-selector">
+            <h2>Select Canadian-Listed Thematic ETFs to Compare (Max 3)</h2>
+            <p>Choose from ETFs targeting various themes available on Canadian exchanges.</p>
+            <div class="etf-group">
+                <h3>AI, Robotics & Automation</h3>
+                <ul class="etf-selection-list">
+                    <li class="etf-select-item"><label><input type="checkbox" value="ZAUT"> ZAUT (BMO AI)</label></li>
+                    <li class="etf-select-item"><label><input type="checkbox" value="RBOT"> RBOT (Horizons Robotics)</label></li>
+                     <li class="etf-select-item"><label><input type="checkbox" value="FOUR"> FOUR (Global X Industry 4.0)</label></li>
+                </ul>
+            </div>
+             <div class="etf-group">
+                <h3>Cybersecurity</h3>
+                <ul class="etf-selection-list">
+                     <li class="etf-select-item"><label><input type="checkbox" value="HBUG"> HBUG (Horizons)</label></li>
+                     <li class="etf-select-item"><label><input type="checkbox" value="CYBR"> CYBR (Evolve)</label></li>
+                 </ul>
+            </div>
+             <div class="etf-group">
+                 <h3>Clean Energy / Carbon</h3>
+                <ul class="etf-selection-list">
+                     <li class="etf-select-item"><label><input type="checkbox" value="ZCLN"> ZCLN (iShares)</label></li>
+                     <li class="etf-select-item"><label><input type="checkbox" value="HCLN"> HCLN (Horizons Hydrogen)</label></li>
+                     <li class="etf-select-item"><label><input type="checkbox" value="CARB"> CARB (Horizons Carbon)</label></li>
+                 </ul>
+            </div>
+             <div class="etf-group">
+                 <h3>Blockchain (Non-Crypto Asset Focus)</h3>
+                <ul class="etf-selection-list">
+                     <li class="etf-select-item"><label><input type="checkbox" value="HBLK"> HBLK (Horizons)</label></li>
+                </ul>
+            </div>
+            <div class="etf-group">
+                <h3>Batteries / Electric Vehicles</h3>
+                <ul class="etf-selection-list">
+                    <li class="etf-select-item"><label><input type="checkbox" value="BATT"> BATT (Evolve)</label></li>
+                 </ul>
+            </div>
+            <p id="selection-message" style="display: none;"></p>
+        </section>
+
+        <section id="comparison-area">
+            <h2 style="text-align: center;">Thematic ETF Comparison</h2>
+            <div id="comparison-output">
+                </div>
+        </section>
+
+         <section id="summary">
+             <h2>Key Differences & Considerations (Thematic ETFs)</h2>
+            <p>Comparing thematic ETFs requires extra diligence due to their specialized nature:</p>
+            <ul>
+                <li><strong>Theme Definition & Purity:</strong> How strictly does the ETF adhere to the theme? Some may include tangential companies. Check the index methodology (if any) or active manager's strategy. Does it focus on pure-play companies or enablers?</li>
+                 <li><strong>High <span class="tooltip" data-tooltip="Management Expense Ratio: Annual fee.">MER</span>s:</strong> Thematic ETFs often carry significantly higher fees than broad market or even sector funds (e.g., 0.40% to 0.75%+ is common). High fees create a hurdle for outperformance.</li>
+                 <li><strong>Concentration & Holdings Overlap:</strong> These ETFs are usually highly concentrated in a small number of stocks. The top 10 holdings can make up a very large percentage of the fund. If holding multiple thematic ETFs, check for significant overlap in underlying stocks.</li>
+                 <li><strong>Geographic Exposure:</strong> Most thematic ETFs have a global or heavy US focus, as many innovative companies are based there. Understand the geographic tilt.</li>
+                 <li><strong><span class="tooltip" data-tooltip="Assets Under Management: Total fund value. Lower AUM ETFs might have wider bid-ask spreads and potentially higher risk of closure.">AUM</span> & Trading Volume:</strong> Many thematic ETFs are smaller and less traded than broad market funds. Very low AUM can sometimes indicate a risk of the fund eventually closing. Check trading volume for liquidity.</li>
+                 <li><strong>Is it Hype or a Durable Trend?</strong> Assess whether the theme represents a long-term structural shift or a potentially short-lived trend fueled by market excitement. Investing at peak hype can be risky.</li>
+            </ul>
+             <p>Thematic ETFs can be exciting but should generally form only a small, satellite part of a well-diversified core portfolio due to their higher risk and cost profile. Deep research into the specific theme and the ETF's construction is essential.</p>
+         </section>
+
+         <p class="disclaimer">
+             <strong>Disclaimer:</strong> Data requires verification. Information is for informational purposes only... Verify all details... Performance data is historical... Data As Of: March 29, 2025.
+        </p>
+    </main>
+
+     <footer>
+         <p>© ETFsCanada.ca 2025 | Data manually collected, verify with source. | Contact: <a href="mailto:shane@leedham.xyz">shane@leedham.xyz</a></p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

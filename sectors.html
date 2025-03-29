@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Sector ETFs | ETFsCanada.ca</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <style>
+        /* Styles specific to comparison pages (can be kept or moved to main CSS if preferred) */
+        .etf-group h3 { font-size: 1.4rem; color: var(--primary-color); margin-top: 2rem; margin-bottom: 1rem; padding-bottom: 0.3rem; border-bottom: 2px solid var(--light-grey); }
+        .etf-selection-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: flex-start; margin-left:0;}
+        .etf-select-item { background-color: var(--light-grey); padding: 8px 15px; border-radius: 20px; cursor: pointer; border: 1px solid var(--border-color); transition: background-color 0.3s, border-color 0.3s, color 0.3s, transform 0.2s ease; font-size: 0.9rem; display: flex; align-items: center;}
+        .etf-select-item:hover { border-color: var(--secondary-color); transform: translateY(-2px); }
+        .etf-select-item input[type="checkbox"] { margin-right: 8px; accent-color: var(--primary-color); cursor: pointer; }
+        .etf-select-item label { cursor: pointer; user-select: none; }
+        .etf-select-item.selected { background-color: var(--primary-color); color: white; border-color: var(--primary-color); transform: translateY(-2px) scale(1.03); }
+        #selection-message { text-align: center; margin-top: 1.5rem; color: #dc3545; font-weight: 600; display: none; }
+        #comparison-area { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color); opacity: 0; transition: opacity 0.6s ease-out, transform 0.6s ease-out; min-height: 300px; border-radius: 10px; background-color: var(--light-grey); padding: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); display: none; /* Start hidden */ }
+        #comparison-area.visible { opacity: 1; transform: translateY(0); display: block; }
+        #comparison-area > h2 { text-align: center; border-bottom: none; margin-bottom: 2rem; }
+        .comparison-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; align-items: start; margin-bottom: 2rem;}
+        .comparison-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.1); padding: 1.5rem 2rem; color: var(--text-color); height: 100%;}
+        @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) { .comparison-card { background-color: #ffffff; } }
+        .comparison-card h3 { margin-top: 0; color: var(--primary-color); border-bottom: 3px solid var(--accent-color); padding-bottom: 0.6rem; margin-bottom: 1.5rem; text-align: center; font-size: 1.4rem; }
+        .comparison-card h3 a { color: inherit; }
+        .comparison-card h3 a:hover { color: var(--secondary-color); text-decoration: underline;}
+        .comparison-card ul { list-style: none; padding: 0; margin: 0; }
+        .comparison-card li { margin-bottom: 0.8rem; font-size: 1rem; display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-color); padding-bottom: 0.5rem; align-items: center;}
+        .comparison-card li strong { font-weight: 600; color: var(--primary-color); margin-right: 10px; flex-shrink: 0; }
+        .comparison-card li span { text-align: right; word-break: break-word; }
+        .comparison-card li span.lowest-mer { color: #28a745; font-weight: 700; }
+        .comparison-card li span.lowest-mer::after { content: " (Lowest)"; font-size: 0.8em; font-style: italic; margin-left: 4px; color: #28a745;}
+        .comparison-card li span.highest-mer { color: #dc3545; font-weight: 700; }
+        .comparison-card li span.highest-mer::after { content: " (Highest)"; font-size: 0.8em; font-style: italic; margin-left: 4px; color: #dc3545;}
+        .comparison-card h4 { font-size: 1.1rem; color: var(--primary-color); margin-top: 1.5rem; margin-bottom: 0.5rem; padding-bottom: 0.2rem; border-bottom: 1px solid var(--light-grey); }
+        .comparison-card .top-holdings-list { list-style: decimal inside; padding-left: 0; margin-top: 0.5rem; font-size: 0.9em; }
+        .comparison-card .top-holdings-list li { border-bottom: none; margin-bottom: 0.4rem; padding-bottom: 0; display: list-item; text-align: left; justify-content: flex-start; font-size: inherit; }
+        .chart-wrapper { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 10px; padding: 1.5rem; margin-top: 2rem; box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.3);}
+        @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) { .chart-wrapper { background-color: #ffffff; } }
+        .chart-wrapper h3 { margin-top: 0; text-align: center; color: var(--primary-color); border-bottom: none; margin-bottom: 1.5rem;}
+        .chart-container { max-width: 100%; margin: 1rem auto; position: relative; }
+        #mer-comparison-chart-container .chart-container { height: 200px; }
+        /* Geo/Sector charts might not be relevant for single sectors, adjust as needed */
+        #geo-comparison-chart-container .chart-container { height: 350px; }
+        #sector-comparison-chart-container .chart-container { height: 350px; }
+        canvas { animation: fadeIn 1s ease-out; }
+     </style>
+</head>
+<body>
+
+     <header class="hero" style="min-height: 30vh; padding: 4rem 1rem;">
+        <div class="hero-content">
+            <h1 style="font-size: 3rem;">Sector <span class="tooltip" data-tooltip="Exchange-Traded Fund: A type of investment fund traded on stock exchanges.">ETFs</span></h1>
+            <p style="font-size: 1.1rem;">Target Specific Industries within the Canadian & Global Markets</p>
+        </div>
+    </header>
+
+     <nav class="sticky-nav">
+        <ul>
+             <li><a href="index.html">Home</a></li>
+            <li><a href="all-in-one-etfs.html">All-in-One</a></li>
+            <li><a href="regions.html">Regions</a></li>
+            <li><a href="sectors.html">Sectors</a></li>
+            <li><a href="fixed-income.html">Fixed Income</a></li>
+            <li><a href="factor.html">Factor</a></li>
+            <li><a href="thematic.html">Thematic</a></li>
+            <li><a href="commodities.html">Commodities</a></li>
+            <li><a href="crypto.html">Crypto</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="intro">
+             <h2>Investing in Specific Sectors</h2>
+            <p>
+                Sector ETFs allow investors to gain targeted exposure to specific industries or segments of the economy, as defined by classification systems like <span class="tooltip" data-tooltip="Global Industry Classification Standard: A widely used system for categorizing companies into sectors and industries.">GICS</span>. This can be used to overweight sectors you believe will outperform, hedge other portfolio exposures, or gain access to industries not well-represented in broad market indexes.
+            </p>
+            <p>
+                However, sector investing comes with **concentration risk**. By focusing on a single industry, these ETFs can be much more volatile than diversified broad market funds, and their performance is heavily tied to the fortunes of that specific sector. It's crucial to understand the specific companies and drivers within a sector before investing. Use the tool below to compare ETFs within various sectors.
+            </p>
+             <p class="data-date">Comparison data requires verification. Data As Of: March 28, 2025. Always verify with official provider documents.</p>
+        </section>
+
+        <section id="etf-selector">
+            <h2>Select ETFs to Compare (Max 3)</h2>
+            <p>Choose from the sector ETFs below. Comparisons will appear automatically when you select 2 or 3.</p>
+            <div class="etf-group"><h3>Financials</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="ZEB"> ZEB (BMO Eq Wt Banks)</label></li><li class="etf-select-item"><label><input type="checkbox" value="XFN"> XFN (iShares Capped Fin)</label></li><li class="etf-select-item"><label><input type="checkbox" value="HCAL"> HCAL (Horizons Eq Wt Banks 1.25x)</label></li></ul></div>
+            <div class="etf-group"><h3>Energy</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XEG"> XEG (iShares Capped Energy)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZEO"> ZEO (BMO Eq Wt Oil&Gas)</label></li><li class="etf-select-item"><label><input type="checkbox" value="HXE"> HXE (Horizons Capped Energy TRI)</label></li></ul></div>
+            <div class="etf-group"><h3>Technology</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XIT"> XIT (iShares Capped IT)</label></li><li class="etf-select-item"><label><input type="checkbox" value="TEC"> TEC (BMO Global Tech Innov)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZNQ"> ZNQ (BMO Nasdaq 100)</label></li><li class="etf-select-item"><label><input type="checkbox" value="HXQ"> HXQ (Horizons Nasdaq 100 TRI)</label></li></ul></div>
+            <div class="etf-group"><h3>Materials</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XMA"> XMA (iShares Capped Materials)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZMT"> ZMT (BMO Eq Wt Global Base Metals)</label></li><li class="etf-select-item"><label><input type="checkbox" value="XGD"> XGD (iShares Global Gold)</label></li></ul></div>
+            <div class="etf-group"><h3>Utilities</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XUT"> XUT (iShares Capped Utilities)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZUT"> ZUT (BMO Eq Wt Utilities)</label></li></ul></div>
+            <div class="etf-group"><h3>Real Estate (REITs)</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XRE"> XRE (iShares Capped REIT)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZRE"> ZRE (BMO Eq Wt REITs)</label></li><li class="etf-select-item"><label><input type="checkbox" value="VRE"> VRE (Vanguard Capped REIT)</label></li></ul></div>
+            <div class="etf-group"><h3>Healthcare</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XHC"> XHC (iShares Capped Health)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZUH"> ZUH (BMO Eq Wt US Health)</label></li></ul></div>
+            <p id="selection-message"></p>
+        </section>
+
+        <section id="comparison-area">
+            <h2 style="text-align: center;">Side-by-Side Comparison</h2>
+            <div id="comparison-output">
+                <!-- Comparison cards and charts will be generated here by script.js -->
+            </div>
+        </section>
+
+        <section id="summary">
+             <h2>Key Differences & Considerations (Sector ETFs)</h2>
+            <p>
+                When choosing Sector ETFs, consider these factors:
+            </p>
+             <ul>
+                <li><strong>Concentration Risk:</strong> This is the biggest factor. Sector ETFs concentrate investment in one industry, making them inherently riskier and more volatile than broad market ETFs. Performance is tied to that sector's specific economic conditions, regulations, and cycles.</li>
+                <li><strong>Geographic Focus:</strong> Some sector ETFs focus purely on Canadian companies (e.g., XIT, ZEB), while others offer global or US exposure from a Canadian listing (e.g., TEC, ZUH, ZMT). Understand the geographic scope.</li>
+                <li><strong>Index Methodology:</strong> Check if the ETF is market-cap weighted (larger companies have more influence, like XFN, XEG) or equal weighted (gives smaller companies the same influence as larger ones, like ZEB, ZEO). Some may track specific sub-sectors (e.g., XGD for gold miners within Materials).</li>
+                 <li><strong>MERs:</strong> Sector ETF MERs vary more widely than broad index or asset allocation ETFs, often ranging from ~0.30% to over 0.60%. Compare costs carefully.</li>
+                 <li><strong>Specific Structures:</strong> Look out for swap-based structures (like HXT, HXE, HXQ) for potential tax efficiency but added complexity/risk, or leveraged ETFs (like HCAL) which amplify returns and risks.</li>
+                <li><strong>Overlap:</strong> Be mindful of potential overlap if holding multiple sector ETFs or sector ETFs alongside broad market funds.</li>
+            </ul>
+             <p>
+                Sector investing requires more research and active monitoring than broad diversification strategies. Ensure any sector bet aligns with your overall portfolio goals and risk tolerance. Always check the ETF Facts document.
+            </p>
+         </section>
+
+         <p class="disclaimer">
+             <strong>Disclaimer:</strong> Data requires verification. Information is for informational purposes only and not financial advice. Verify all details with official provider documents before investing. Data As Of: March 28, 2025.
+        </p>
+    </main>
+
+     <footer>
+         <p>&copy; ETFsCanada.ca 2025 | Data manually collected, verify with source.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
