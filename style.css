@@ -13,14 +13,14 @@
     --card-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.1);
     --button-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
     /* Define Nav Height Variable - Adjust if padding/content changes */
-    --nav-height: 60px;
+    --nav-height: 60px; /* Approximate height, adjust if needed */
 }
 
 body {
     font-family: var(--body-font);
     line-height: 1.7;
     margin: 0;
-    padding: 0;
+    padding: 0; /* Reset body padding */
     background-color: var(--background-color);
     color: var(--text-color);
     font-size: 17px;
@@ -110,10 +110,11 @@ header.hero[style*="min-height: 30vh"] p { font-size: 1.1rem; }
 .cta-button:hover, .cta-button:focus { background-color: #ffffff; color: var(--primary-color); transform: translateY(-4px) scale(1.05); box-shadow: 0 8px 20px rgba(80, 227, 194, 0.5); text-decoration: none; }
 
 /* --- Navigation --- */
+/* Default styles (Desktop) - position: sticky */
 nav.sticky-nav {
     background-color: #ffffff;
     padding: 0.5rem 1.5rem; /* Determines height along with content */
-    position: sticky; /* Stick to the top */
+    position: sticky; /* Stick to the top on DESKTOP */
     top: 0; /* Stick at the very top */
     z-index: 1000; /* Ensure it's above other content */
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -285,53 +286,8 @@ footer a:hover { color: var(--accent-color); }
 /* --- Disclaimer --- */
 .disclaimer, .data-date { font-size: 0.9rem; color: #5a606b; background-color: #e9f2ff; border-left: 5px solid var(--secondary-color); padding: 15px 20px; margin: 2rem 0; /* Adjusted margin */ border-radius: 4px; }
 
-/* --- Responsive Adjustments --- */
-@media (max-width: 992px) {
-    .hero-content h1 { font-size: 3.5rem; }
-    /* nav ul li { margin: 0 8px;} REMOVED - Handled by flex gap */
-}
-@media (max-width: 768px) {
-    body { font-size: 16px; }
-    .hero { padding: 6rem 1rem 5rem 1rem; min-height: 50vh; }
-    header.hero[style*="min-height: 30vh"] { min-height: auto; padding: 3rem 1rem; }
-    header.hero[style*="min-height: 30vh"] h1 { font-size: 2.5rem; }
-    header.hero[style*="min-height: 30vh"] p { font-size: 1rem; }
-    .hero-content h1 { font-size: 2.8rem; }
-    .hero-content p { font-size: 1.1rem; }
-    /* nav ul li { margin: 0 5px; } REMOVED */
-    /* nav ul li a { padding: 6px; font-size: 0.9rem;} REMOVED */
-    main { margin: 2rem auto; padding: 0 1rem;}
-    section { padding: 1.5rem; margin-bottom: 2.5rem;}
-    section#intro { padding: 0;}
-    section#summary { padding: 1rem 1.5rem;}
-    h2 { font-size: 1.8rem; }
-    .comparison-card { padding: 1rem 1.25rem;}
-    .chart-wrapper { padding: 1rem;}
-    #geo-comparison-chart-container .chart-container, #us-geo-comparison-chart-container .chart-container { height: 300px; }
-    #sector-comparison-chart-container .chart-container, #us-sector-comparison-chart-container .chart-container { height: 300px; }
-    .donation-options { gap: 1rem; }
-}
-@media (max-width: 576px) {
-    /* nav ul li { display: block; margin: 8px 0; } REMOVED - Handled by mobile CSS */
-    .category-links { grid-template-columns: 1fr; gap: 1rem; }
-    .hero { padding: 5rem 1rem 4rem 1rem; }
-    .hero-content h1 { font-size: 2.4rem; }
-    header.hero[style*="min-height: 30vh"] h1 { font-size: 2rem; }
-    .etf-selection-list { justify-content: center;}
-    .comparison-container { grid-template-columns: 1fr; }
-    #mer-comparison-chart-container .chart-container, #us-mer-comparison-chart-container .chart-container { height: 180px; }
-    #geo-comparison-chart-container .chart-container, #us-geo-comparison-chart-container .chart-container { height: 280px; }
-    #sector-comparison-chart-container .chart-container, #us-sector-comparison-chart-container .chart-container { height: 280px; }
-    .donation-option-item { flex-basis: calc(50% - 0.5rem); }
-}
-@media (max-width: 400px) {
-    .donation-option-item { flex-basis: 100%; }
-}
-
 /* --- General Enhancements --- */
 body {
-    /* Optional: Add a very subtle background pattern or texture */
-    /* background-image: url('path/to/subtle-pattern.png'); */
     background-color: #fdfdfd; /* Slightly off-white */
 }
 
@@ -454,12 +410,29 @@ section > p:first-of-type { /* More space after section title if p follows */
 }
 
 
-/* --- Responsive Adjustments for Nav --- */
-@media (max-width: 992px) { /* Adjust breakpoint as needed */
-    nav ul#primary-navigation { /* Target the specific UL */
+/* --- Responsive Adjustments --- */
+
+/* MOBILE FIRST / Smaller Screens (<= 992px) */
+@media (max-width: 992px) {
+    /* Force Nav Bar to be Fixed on Mobile */
+    nav.sticky-nav {
+        position: fixed; /* *** CHANGED to fixed for mobile reliability *** */
+        top: 0;
+        left: 0;
+        right: 0; /* Ensures full width */
+        /* Keep other sticky styles like background, shadow, z-index */
+    }
+
+    /* Add Padding to Body to offset fixed nav */
+    body {
+        padding-top: var(--nav-height); /* *** ADDED padding-top to body *** */
+    }
+
+    /* Styles for the dropdown menu itself */
+    nav ul#primary-navigation {
         display: none; /* Hide the menu initially */
-        position: fixed; /* *** CHANGED from absolute to fixed *** */
-        top: var(--nav-height); /* *** Position below the sticky nav bar based on variable *** */
+        position: fixed; /* Keep dropdown fixed relative to viewport */
+        top: var(--nav-height); /* Position below the fixed nav bar */
         left: 0;
         right: 0;
         background-color: #ffffff;
@@ -468,37 +441,36 @@ section > p:first-of-type { /* More space after section title if p follows */
         box-shadow: 0 5px 10px rgba(0,0,0,0.1);
         border-top: 1px solid var(--border-color);
         z-index: 9990; /* Below toggle button but above content */
-        /* Add max height and overflow for very long menus on short screens */
         max-height: calc(100vh - var(--nav-height));
         overflow-y: auto;
     }
 
     /* Show the list when toggled */
-    nav ul#primary-navigation.nav-open { /* Target the specific UL */
+    nav ul#primary-navigation.nav-open {
         display: flex;
     }
 
-    nav ul#primary-navigation li { /* Target the specific LIs */
-        display: block; /* Make list items block level */
+    nav ul#primary-navigation li {
+        display: block;
         margin: 0;
         width: 100%;
-        text-align: center; /* Center text */
+        text-align: center;
     }
-    nav ul#primary-navigation li a { /* Target links within the specific UL */
-        display: block; /* Make links fill the list item */
-        padding: 1rem 1.5rem; /* Generous padding for tapping */
-        border-bottom: 1px solid var(--light-grey); /* Separator */
+    nav ul#primary-navigation li a {
+        display: block;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--light-grey);
         font-size: 1rem;
     }
     nav ul#primary-navigation li:last-child a {
-        border-bottom: none; /* Remove border from last item */
+        border-bottom: none;
     }
-     nav ul#primary-navigation li a::after { /* Hide underline effect on mobile */
+     nav ul#primary-navigation li a::after {
         display: none;
     }
      nav ul#primary-navigation li a:hover,
      nav ul#primary-navigation li a:focus {
-        background-color: var(--light-grey); /* Add hover background */
+        background-color: var(--light-grey);
         color: var(--primary-color);
     }
 
@@ -506,33 +478,55 @@ section > p:first-of-type { /* More space after section title if p follows */
         display: block; /* Show the hamburger button */
     }
 
-    /* Adjust main content padding if nav height changes */
-    /* body { padding-top: var(--nav-height); } /* Example if needed, often sticky handles this */
+    /* Other responsive adjustments for this breakpoint */
+    .hero-content h1 { font-size: 3.5rem; }
 }
 
-/* Further refinements for smaller screens */
+/* Medium Screens (<= 768px) */
 @media (max-width: 768px) {
-    .site-main { margin: 2rem auto; }
-    section { padding: 1.5rem; margin-bottom: 3rem; }
-    .category-links { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
-    .category-link { min-height: 100px; padding: 1.2rem 0.8rem;}
-    .category-icon { font-size: 1.8rem; margin-bottom: 0.6rem; }
-    h1 { font-size: 3rem; }
-    h2 { font-size: 1.8rem; margin-bottom: 1rem; }
-    .welcome-section p { font-size: 1rem; }
-     /* Adjust disclaimer/data-date margins if needed */
-    .data-date { margin-bottom: 1rem; padding: 8px 12px; }
-    .disclaimer { margin: 1rem auto 1.5rem auto; padding: 10px 15px; }
-}
-@media (max-width: 576px) {
-    .hero-content h1 { font-size: 2.4rem; }
+    body { font-size: 16px; }
+    .hero { padding: 6rem 1rem 5rem 1rem; min-height: 50vh; }
+    header.hero[style*="min-height: 30vh"] { min-height: auto; padding: 3rem 1rem; }
+    header.hero[style*="min-height: 30vh"] h1 { font-size: 2.5rem; }
+    header.hero[style*="min-height: 30vh"] p { font-size: 1rem; }
+    .hero-content h1 { font-size: 2.8rem; }
     .hero-content p { font-size: 1.1rem; }
-    .cta-button { padding: 12px 28px; font-size: 1rem;}
-    .category-links { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
-    nav.sticky-nav { padding: 0.5rem 1rem; }
-    section { padding: 1rem 1.2rem; }
-     .donation-option-item { flex-basis: calc(50% - 0.5rem); }
+    main { margin: 2rem auto; padding: 0 1rem;}
+    section { padding: 1.5rem; margin-bottom: 2.5rem;} /* Reduced margin */
+    section#intro { padding: 0;}
+    section#summary { padding: 1rem 1.5rem;}
+    h2 { font-size: 1.8rem; }
+    .comparison-card { padding: 1rem 1.25rem;}
+    .chart-wrapper { padding: 1rem;}
+    #geo-comparison-chart-container .chart-container, #us-geo-comparison-chart-container .chart-container { height: 300px; }
+    #sector-comparison-chart-container .chart-container, #us-sector-comparison-chart-container .chart-container { height: 300px; }
+    .donation-options { gap: 1rem; }
+
+    /* Adjust site-main margin if body padding is added */
+    .site-main { margin-top: 2rem; margin-bottom: 2rem; }
 }
+
+/* Small Screens (<= 576px) */
+@media (max-width: 576px) {
+    .category-links { grid-template-columns: 1fr; gap: 1rem; }
+    .hero { padding: 5rem 1rem 4rem 1rem; }
+    .hero-content h1 { font-size: 2.4rem; }
+    header.hero[style*="min-height: 30vh"] h1 { font-size: 2rem; }
+    .etf-selection-list { justify-content: center;}
+    .comparison-container { grid-template-columns: 1fr; }
+    #mer-comparison-chart-container .chart-container, #us-mer-comparison-chart-container .chart-container { height: 180px; }
+    #geo-comparison-chart-container .chart-container, #us-geo-comparison-chart-container .chart-container { height: 280px; }
+    #sector-comparison-chart-container .chart-container, #us-sector-comparison-chart-container .chart-container { height: 280px; }
+    .donation-option-item { flex-basis: calc(50% - 0.5rem); }
+
+    nav.sticky-nav { padding: 0.5rem 1rem; } /* Slightly reduce padding */
+    /* Adjust nav height variable if needed for smaller screens, though 60px is likely fine */
+    /* :root { --nav-height: 50px; } */
+
+    section { padding: 1rem 1.2rem; }
+}
+
+/* Extra Small Screens (<= 400px) */
  @media (max-width: 400px) {
     .category-links { grid-template-columns: 1fr 1fr; } /* Two columns on very small */
      .donation-option-item { flex-basis: 100%; }
