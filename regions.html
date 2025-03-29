@@ -6,6 +6,7 @@
     <title>Compare Regional Equity ETFs | ETFsCanada.ca</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -58,8 +59,12 @@
         </div>
     </header>
 
-     <nav class="sticky-nav">
-        <ul>
+    <nav class="sticky-nav">
+        <button class="mobile-nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+            <i class="fas fa-bars open-icon"></i>
+            <i class="fas fa-times close-icon"></i>
+        </button>
+         <ul id="primary-navigation">
              <li><a href="index.html">Home</a></li>
             <li><a href="all-in-one-etfs.html">All-in-One</a></li>
             <li><a href="regions.html">Regions</a></li>
@@ -67,7 +72,7 @@
             <li><a href="fixed-income.html">Fixed Income</a></li>
             <li><a href="factor.html">Factor</a></li>
             <li><a href="thematic.html">Thematic</a></li>
-            <li><a href="commodities.html">Commodities</a></li>
+            <li><a href="commodities.html">Commodity</a></li>
             <li><a href="crypto.html">Crypto</a></li>
         </ul>
     </nav>
@@ -78,15 +83,15 @@
             <p>
                 Building a diversified portfolio often involves investing in different geographic regions beyond your home country. Regional Equity ETFs allow you to easily gain exposure to the stock markets of specific countries or areas like Canada, the United States, International Developed markets, and Emerging Markets. This page compares popular options available to Canadians for each major region using the interactive tool below.
             </p>
-             <p class="data-date">Comparison data requires verification. Data As Of: March 28, 2025. Always verify with official provider documents.</p>
+             <p class="data-date">Comparison data requires verification. Data As Of: March 29, 2025. Always verify with official provider documents.</p>
         </section>
 
         <section id="etf-selector">
             <h2>Select ETFs to Compare (Max 3)</h2>
             <p>Choose from the regional ETFs below. Comparisons will appear automatically when you select 2 or 3.</p>
             <div class="etf-group"><h3>Canada</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XIC"> XIC (iShares Core S&P/TSX)</label></li><li class="etf-select-item"><label><input type="checkbox" value="VCN"> VCN (Vanguard FTSE Canada)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZCN"> ZCN (BMO S&P/TSX)</label></li><li class="etf-select-item"><label><input type="checkbox" value="HXT"> HXT (Horizons S&P/TSX 60 TRI)</label></li></ul></div>
-            <div class="etf-group"><h3>United States</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="VFV"> VFV (Vanguard S&P 500)</label></li><li class="etf-select-item"><label><input type="checkbox" value="XUU"> XUU (iShares US Total Mkt)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZSP"> ZSP (BMO S&P 500)</label></li><li class="etf-select-item"><label><input type="checkbox" value="VSP"> VSP (Vanguard S&P 500 Hedged)</label></li><li class="etf-select-item"><label><input type="checkbox" value="QQC.F"> QQC.F (Invesco Nasdaq 100 Hedged)</label></li></ul></div>
-            <div class="etf-group"><h3>International Developed (ex-NA)</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XEF"> XEF (iShares MSCI EAFE IMI)</label></li><li class="etf-select-item"><label><input type="checkbox" value="VIU"> VIU (Vanguard FTSE Dev ex-NA)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZEA"> ZEA (BMO MSCI EAFE)</label></li></ul></div>
+            <div class="etf-group"><h3>United States</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="VFV"> VFV (Vanguard S&P 500)</label></li><li class="etf-select-item"><label><input type="checkbox" value="XUU"> XUU (iShares US Total Mkt)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZSP"> ZSP (BMO S&P 500)</label></li><li class="etf-select-item"><label><input type="checkbox" value="HXS"> HXS (Horizons S&P 500 TRI)</label></li><li class="etf-select-item"><label><input type="checkbox" value="VSP"> VSP (Vanguard S&P 500 Hedged)</label></li><li class="etf-select-item"><label><input type="checkbox" value="QQC.F"> QQC.F (Invesco Nasdaq 100 Hedged)</label></li></ul></div>
+            <div class="etf-group"><h3>International Developed (ex-NA)</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XEF"> XEF (iShares MSCI EAFE IMI)</label></li><li class="etf-select-item"><label><input type="checkbox" value="VIU"> VIU (Vanguard FTSE Dev ex-NA)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZEA"> ZEA (BMO MSCI EAFE)</label></li><li class="etf-select-item"><label><input type="checkbox" value="HXDM"> HXDM (Horizons Intl Dev TRI)</label></li></ul></div>
             <div class="etf-group"><h3>Emerging Markets</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XEC"> XEC (iShares MSCI EM IMI)</label></li><li class="etf-select-item"><label><input type="checkbox" value="VEE"> VEE (Vanguard FTSE EM)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZEM"> ZEM (BMO MSCI EM)</label></li></ul></div>
             <p id="selection-message"></p>
         </section>
@@ -111,13 +116,13 @@
                     <strong>Geographic Focus:</strong> Ensure the ETF aligns with the specific region you want exposure to (Canada, US, Intl Developed, Emerging). Note key index differences, like South Korea's classification (Developed by FTSE, Emerging by MSCI).
                 </li>
                  <li>
-                    <strong>Cost (<span class="tooltip" data-tooltip="Management Expense Ratio: Annual fee.">MER</span>):</strong> Canadian and US broad market ETFs typically have very low MERs (0.05-0.10%). International and Emerging market ETFs are usually more expensive (0.20-0.30%). Swap-based ETFs (like HXT) may advertise low MERs but have additional implicit costs (swap fees).
-                </li>
+                    <strong>Cost (<span class="tooltip" data-tooltip="Management Expense Ratio: Annual fee.">MER</span>):</strong> Canadian and US broad market ETFs typically have very low MERs (0.05-0.10%). International and Emerging market ETFs are usually more expensive (0.20-0.30%). Swap-based ETFs (like HXT, HXS, HXDM) may advertise low MERs but have additional implicit costs (swap fees) that need to be considered in the total cost.
+                 </li>
                  <li>
                     <strong>Currency Hedging (for non-Canadian ETFs):</strong> Decide if you want returns exposed to foreign currency fluctuations (unhedged) or neutralized back to CAD (hedged). Hedging adds cost and complexity and doesn't guarantee better returns. Unhedged is often preferred for long-term equity holdings.
                  </li>
                  <li>
-                    <strong>Structure (Physical vs. Swap):</strong> Most regional ETFs physically hold the underlying stocks. Some, like HXT, use Total Return Swaps for tax efficiency in non-registered accounts (deferring capital gains) but introduce counterparty risk.
+                    <strong>Structure (Physical vs. Swap):</strong> Most regional ETFs physically hold the underlying stocks. Some, like HXT, HXS, and HXDM, use Total Return Swaps for tax efficiency in non-registered accounts (deferring capital gains) but introduce counterparty risk and potential tracking differences.
                  </li>
                  <li>
                     <strong>Sector & Country Weights:</strong> Be aware of concentration risks. Canadian ETFs are heavy in Financials/Energy. US ETFs are heavy in Technology. Emerging Markets often have high concentration in China/Taiwan/India. Check the comparison charts for specific allocations.
@@ -132,12 +137,12 @@
          </section>
 
          <p class="disclaimer">
-             <strong>Disclaimer:</strong> Data requires verification. Information is for informational purposes only and not financial advice. Verify all details with official provider documents before investing. Data As Of: March 28, 2025.
+             <strong>Disclaimer:</strong> Data requires verification. Information is for informational purposes only and not financial advice. Verify all details with official provider documents before investing. Data As Of: March 29, 2025.
         </p>
     </main>
 
      <footer>
-         <p>&copy; ETFsCanada.ca 2025 | Data manually collected, verify with source.</p>
+         <p>© ETFsCanada.ca 2025 | Data manually collected, verify with source.</p>
     </footer>
 
     <script src="script.js"></script>

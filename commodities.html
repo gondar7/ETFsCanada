@@ -6,6 +6,7 @@
     <title>Compare Commodity ETFs | ETFsCanada.ca</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -59,8 +60,12 @@
         </div>
     </header>
 
-      <nav class="sticky-nav">
-         <ul>
+    <nav class="sticky-nav">
+        <button class="mobile-nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+            <i class="fas fa-bars open-icon"></i>
+            <i class="fas fa-times close-icon"></i>
+        </button>
+         <ul id="primary-navigation">
              <li><a href="index.html">Home</a></li>
             <li><a href="all-in-one-etfs.html">All-in-One</a></li>
             <li><a href="regions.html">Regions</a></li>
@@ -68,7 +73,7 @@
             <li><a href="fixed-income.html">Fixed Income</a></li>
             <li><a href="factor.html">Factor</a></li>
             <li><a href="thematic.html">Thematic</a></li>
-            <li><a href="commodities.html">Commodities</a></li>
+            <li><a href="commodities.html">Commodity</a></li>
             <li><a href="crypto.html">Crypto</a></li>
         </ul>
     </nav>
@@ -77,20 +82,21 @@
         <section id="intro">
             <h2>Understanding Commodity <span class="tooltip" data-tooltip="Exchange-Traded Funds: Funds holding baskets of securities, traded on exchanges.">ETFs</span></h2>
             <p>
-                Commodity ETFs provide investors with exposure to physical goods or raw materials, such as precious metals (gold, silver), energy (crude oil, natural gas), or agricultural products. Unlike traditional stock or bond ETFs, commodity ETFs track the price movements of these underlying assets. They can be structured in different ways: some hold the physical commodity directly (e.g., gold bullion ETFs), while others use <span class="tooltip" data-tooltip="Futures contracts are agreements to buy or sell an asset at a predetermined future date and price.">futures contracts</span> to gain exposure (e.g., oil ETFs).
+                Commodity ETFs provide investors with exposure to physical goods or raw materials, such as precious metals (gold, silver), energy (crude oil, natural gas), uranium, or agricultural products. Unlike traditional stock or bond ETFs, commodity ETFs track the price movements of these underlying assets, or the companies that produce them. They can be structured in different ways: some hold the physical commodity directly (e.g., gold bullion ETFs), while others use <span class="tooltip" data-tooltip="Futures contracts are agreements to buy or sell an asset at a predetermined future date and price.">futures contracts</span> to gain exposure (e.g., oil ETFs), and some hold stocks of commodity producers (e.g., uranium or gold miner ETFs).
             </p>
             <p>
-                Commodities are often considered a separate asset class used for diversification, as their prices may move independently of stocks and bonds. They can also serve as a hedge against <span class="tooltip" data-tooltip="Inflation is the rate at which the general level of prices for goods and services is rising, eroding purchasing power.">inflation</span>. However, commodity prices can be volatile, influenced by factors like global supply and demand, geopolitical events, and weather patterns. Futures-based ETFs also carry risks related to contract rolling (<span class="tooltip" data-tooltip="Contango and backwardation describe futures market conditions where future prices are higher or lower than spot prices, impacting roll yield.">contango/backwardation</span>).
+                Commodities are often considered a separate asset class used for diversification, as their prices may move independently of stocks and bonds. They can also serve as a hedge against <span class="tooltip" data-tooltip="Inflation is the rate at which the general level of prices for goods and services is rising, eroding purchasing power.">inflation</span>. However, commodity prices can be volatile, influenced by factors like global supply and demand, geopolitical events, and weather patterns. Futures-based ETFs also carry risks related to contract rolling (<span class="tooltip" data-tooltip="Contango and backwardation describe futures market conditions where future prices are higher or lower than spot prices, impacting roll yield.">contango/backwardation</span>). Equity-based commodity ETFs carry company-specific risks alongside commodity price risk.
             </p>
-             <p class="data-date">Comparison data requires verification. Data As Of: March 28, 2025. Always verify with official provider documents.</p>
+             <p class="data-date">Comparison data requires verification. Data As Of: March 29, 2025. Always verify with official provider documents.</p>
        </section>
 
         <section id="etf-selector">
             <h2>Select ETFs to Compare (Max 3)</h2>
             <p>Choose from the commodity ETFs below. Comparisons will appear automatically when you select 2 or 3.</p>
-            <div class="etf-group"><h3>Precious Metals</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="CGL"> CGL (iShares Gold)</label></li><li class="etf-select-item"><label><input type="checkbox" value="KILO"> KILO (Purpose Gold)</label></li><li class="etf-select-item"><label><input type="checkbox" value="MNT"> MNT (RBC Gold)</label></li><li class="etf-select-item"><label><input type="checkbox" value="SVR"> SVR (iShares Silver)</label></li></ul></div>
-            <div class="etf-group"><h3>Energy</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="HUC"> HUC (Horizons Crude Oil)</label></li></ul></div>
-            <div class="etf-group"><h3>Diversified</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="COM"> COM (Purpose Real Asset)</label></li></ul></div>
+            <div class="etf-group"><h3>Precious Metals (Bullion)</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="CGL"> CGL (iShares Gold)</label></li><li class="etf-select-item"><label><input type="checkbox" value="KILO"> KILO (Purpose Gold)</label></li><li class="etf-select-item"><label><input type="checkbox" value="MNT"> MNT (RBC Gold)</label></li><li class="etf-select-item"><label><input type="checkbox" value="SVR"> SVR (iShares Silver)</label></li></ul></div>
+            <div class="etf-group"><h3>Energy (Futures / Equity)</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="HUC"> HUC (Horizons Crude Oil Fut)</label></li><li class="etf-select-item"><label><input type="checkbox" value="XEG"> XEG (iShares Energy Equity)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZEO"> ZEO (BMO Energy Equity)</label></li></ul></div>
+             <div class="etf-group"><h3>Other Commodities/Resources</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="HURA"> HURA (Horizons Uranium Equity)</label></li><li class="etf-select-item"><label><input type="checkbox" value="XMA"> XMA (iShares Materials Equity)</label></li><li class="etf-select-item"><label><input type="checkbox" value="XGD"> XGD (iShares Gold Miners Equity)</label></li></ul></div>
+            <div class="etf-group"><h3>Diversified Real Assets</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="COM"> COM (Purpose Real Asset)</label></li></ul></div>
             <!-- Add more groups/ETFs as needed -->
             <p id="selection-message"></p>
         </section>
@@ -109,42 +115,43 @@
             </p>
             <ul>
                 <li>
-                    <strong>Underlying Asset:</strong> What specific commodity or basket does the ETF track (e.g., Gold, Silver, Oil, Broad Basket)? This is the primary driver of performance.
+                    <strong>Underlying Exposure:</strong> What specific commodity or basket does the ETF track (e.g., Gold, Silver, Oil, Uranium, Broad Basket)? Is it tracking the physical commodity, futures contracts, or stocks of companies involved in the commodity? This is the primary driver of performance and risk.
                 </li>
                 <li>
                     <strong>Structure:</strong>
-                    Does it hold the <strong>physical commodity</strong> (common for precious metals)? This offers direct exposure but incurs storage and insurance costs reflected in the MER.
-                    Does it use <strong>futures contracts</strong> (common for oil, gas, agriculture)? This avoids physical storage but introduces roll yield risk (<span class="tooltip" data-tooltip="Futures contracts expire and must be 'rolled' to the next month. Contango (upward sloping futures curve) leads to negative roll yield, while backwardation (downward sloping) leads to positive roll yield.">contango/backwardation</span>) and potential tracking error relative to the spot price.
-                    Is it a <strong>multi-asset fund</strong> holding commodity-producing company stocks alongside futures or physical assets (like COM)? This offers broader diversification but less direct commodity price tracking.
+                    Does it hold the <strong>physical commodity</strong> (common for precious metals like CGL, KILO)? This offers direct exposure but incurs storage and insurance costs reflected in the MER.
+                    Does it use <strong>futures contracts</strong> (common for oil, gas, agriculture like HUC)? This avoids physical storage but introduces roll yield risk (<span class="tooltip" data-tooltip="Futures contracts expire and must be 'rolled' to the next month. Contango (upward sloping futures curve) leads to negative roll yield, while backwardation (downward sloping) leads to positive roll yield.">contango/backwardation</span>) and potential tracking error relative to the spot price.
+                    Does it hold <strong>commodity-producing company stocks</strong> (like XEG, HURA, XGD)? Performance will depend on both commodity prices and company-specific factors (management, operational efficiency, debt levels).
+                    Is it a <strong>multi-asset fund</strong> holding a mix (like COM)? This offers broader diversification but less direct commodity price tracking.
                 </li>
                  <li>
-                    <strong>Cost (<span class="tooltip" data-tooltip="Management Expense Ratio: Annual fee including taxes and operating expenses.">MER</span>):</strong> Physical bullion ETFs generally have lower MERs (0.2-0.4%) than futures-based or actively managed commodity ETFs (0.6%+). Futures management and active strategies are more complex and costly.
+                    <strong>Cost (<span class="tooltip" data-tooltip="Management Expense Ratio: Annual fee including taxes and operating expenses.">MER</span>):</strong> Physical bullion ETFs generally have lower MERs (0.2-0.4%) than futures-based (0.6%+) or equity-based commodity ETFs (0.6%+). Actively managed or specialized ETFs (like Uranium) can be higher (0.8%+).
                 </li>
                  <li>
-                    <strong>Currency Hedging:</strong> Is the ETF hedged back to Canadian dollars? Unhedged ETFs expose you to fluctuations in the USD/CAD exchange rate (as most commodities are priced in USD), adding another layer of volatility. Hedged versions aim to remove this currency effect but incur hedging costs. Check the fund name or documents (e.g., 'CAD-Hedged').
-                </li>
+                    <strong>Currency Hedging:</strong> Is the ETF hedged back to Canadian dollars? Unhedged ETFs (most commodity bullion/futures ETFs) expose you to fluctuations in the USD/CAD exchange rate (as most commodities are priced in USD), adding another layer of volatility. Hedged versions aim to remove this currency effect but incur hedging costs. Check the fund name or documents. Equity-based commodity ETFs holding Canadian stocks (like XEG) don't have this direct currency exposure.
+                 </li>
                  <li>
-                    <strong>Tax Efficiency:</strong> Physical bullion ETFs held in non-registered accounts are typically taxed as capital gains upon sale. Futures-based ETFs might generate income or capital gains depending on structure and distributions. Consult a tax professional for specifics.
-                </li>
+                    <strong>Tax Efficiency:</strong> Physical bullion ETFs held in non-registered accounts are typically taxed as capital gains upon sale. Futures-based ETFs might generate income or capital gains depending on structure and distributions. Equity-based ETFs distribute dividends (eligible/ineligible) and realize capital gains like regular stock ETFs. Consult a tax professional for specifics.
+                 </li>
                  <li>
                     <strong>Counterparty Risk:</strong> For futures-based ETFs, there's a small risk associated with the futures contract counterparties (though typically mitigated by clearinghouses). Physical ETFs have custody risk (risk related to the storage provider).
                  </li>
                  <li>
-                    <strong>Liquidity & <span class="tooltip" data-tooltip="Assets Under Management: Indicates fund size and popularity. Higher AUM often correlates with better liquidity and tighter bid-ask spreads.">AUM</span>:</strong> Larger, more established ETFs generally have better trading liquidity and tighter bid-ask spreads.
+                    <strong>Liquidity & <span class="tooltip" data-tooltip="Assets Under Management: Indicates fund size and popularity. Higher AUM often correlates with better liquidity and tighter bid-ask spreads.">AUM</span>:</strong> Larger, more established ETFs generally have better trading liquidity and tighter bid-ask spreads. Niche commodity ETFs may have lower liquidity.
                  </li>
             </ul>
             <p>
-                Choose a commodity ETF based on the specific exposure you seek, your risk tolerance (especially regarding futures vs. physical), cost sensitivity, and understanding of the structural differences. **Always review the official ETF Facts document before investing.**
+                Choose a commodity ETF based on the specific exposure you seek (direct commodity vs. producers), your risk tolerance (especially regarding futures vs. physical vs. equity), cost sensitivity, and understanding of the structural differences. **Always review the official ETF Facts document before investing.**
             </p>
          </section>
 
          <p class="disclaimer">
-             <strong>Disclaimer:</strong> Data requires verification. Information is for informational purposes only and not financial advice. Verify all details with official provider documents before investing. Data As Of: March 28, 2025.
+             <strong>Disclaimer:</strong> Data requires verification. Information is for informational purposes only and not financial advice. Verify all details with official provider documents before investing. Data As Of: March 29, 2025.
         </p>
     </main>
 
      <footer>
-         <p>&copy; ETFsCanada.ca 2025 | Data manually collected, verify with source.</p>
+         <p>© ETFsCanada.ca 2025 | Data manually collected, verify with source.</p>
     </footer>
 
     <script src="script.js"></script>

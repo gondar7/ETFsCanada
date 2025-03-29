@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compare Sector ETFs | ETFsCanada.ca</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -59,8 +60,12 @@
         </div>
     </header>
 
-     <nav class="sticky-nav">
-        <ul>
+    <nav class="sticky-nav">
+        <button class="mobile-nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+            <i class="fas fa-bars open-icon"></i>
+            <i class="fas fa-times close-icon"></i>
+        </button>
+         <ul id="primary-navigation">
              <li><a href="index.html">Home</a></li>
             <li><a href="all-in-one-etfs.html">All-in-One</a></li>
             <li><a href="regions.html">Regions</a></li>
@@ -68,7 +73,7 @@
             <li><a href="fixed-income.html">Fixed Income</a></li>
             <li><a href="factor.html">Factor</a></li>
             <li><a href="thematic.html">Thematic</a></li>
-            <li><a href="commodities.html">Commodities</a></li>
+            <li><a href="commodities.html">Commodity</a></li>
             <li><a href="crypto.html">Crypto</a></li>
         </ul>
     </nav>
@@ -82,17 +87,17 @@
             <p>
                 However, sector investing comes with **concentration risk**. By focusing on a single industry, these ETFs can be much more volatile than diversified broad market funds, and their performance is heavily tied to the fortunes of that specific sector. It's crucial to understand the specific companies and drivers within a sector before investing. Use the tool below to compare ETFs within various sectors.
             </p>
-             <p class="data-date">Comparison data requires verification. Data As Of: March 28, 2025. Always verify with official provider documents.</p>
+             <p class="data-date">Comparison data requires verification. Data As Of: March 29, 2025. Always verify with official provider documents.</p>
         </section>
 
         <section id="etf-selector">
             <h2>Select ETFs to Compare (Max 3)</h2>
             <p>Choose from the sector ETFs below. Comparisons will appear automatically when you select 2 or 3.</p>
-            <div class="etf-group"><h3>Financials</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="ZEB"> ZEB (BMO Eq Wt Banks)</label></li><li class="etf-select-item"><label><input type="checkbox" value="XFN"> XFN (iShares Capped Fin)</label></li><li class="etf-select-item"><label><input type="checkbox" value="HCAL"> HCAL (Horizons Eq Wt Banks 1.25x)</label></li></ul></div>
-            <div class="etf-group"><h3>Energy</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XEG"> XEG (iShares Capped Energy)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZEO"> ZEO (BMO Eq Wt Oil&Gas)</label></li><li class="etf-select-item"><label><input type="checkbox" value="HXE"> HXE (Horizons Capped Energy TRI)</label></li></ul></div>
+            <div class="etf-group"><h3>Financials</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="ZEB"> ZEB (BMO Eq Wt Banks)</label></li><li class="etf-select-item"><label><input type="checkbox" value="XFN"> XFN (iShares Capped Fin)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZWB"> ZWB (BMO Cov Call Banks)</label></li><li class="etf-select-item"><label><input type="checkbox" value="HCAL"> HCAL (Hamilton Enh Banks)</label></li><li class="etf-select-item"><label><input type="checkbox" value="HFIN"> HFIN (Hamilton Enh Fin)</label></li></ul></div>
+            <div class="etf-group"><h3>Energy</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XEG"> XEG (iShares Capped Energy)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZEO"> ZEO (BMO Eq Wt Oil&Gas)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZWE"> ZWE (BMO Cov Call Energy)</label></li><li class="etf-select-item"><label><input type="checkbox" value="HXE"> HXE (Horizons Capped Energy TRI)</label></li><li class="etf-select-item"><label><input type="checkbox" value="HENG"> HENG (Hamilton Enh Energy)</label></li></ul></div>
             <div class="etf-group"><h3>Technology</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XIT"> XIT (iShares Capped IT)</label></li><li class="etf-select-item"><label><input type="checkbox" value="TEC"> TEC (BMO Global Tech Innov)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZNQ"> ZNQ (BMO Nasdaq 100)</label></li><li class="etf-select-item"><label><input type="checkbox" value="HXQ"> HXQ (Horizons Nasdaq 100 TRI)</label></li></ul></div>
             <div class="etf-group"><h3>Materials</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XMA"> XMA (iShares Capped Materials)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZMT"> ZMT (BMO Eq Wt Global Base Metals)</label></li><li class="etf-select-item"><label><input type="checkbox" value="XGD"> XGD (iShares Global Gold)</label></li></ul></div>
-            <div class="etf-group"><h3>Utilities</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XUT"> XUT (iShares Capped Utilities)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZUT"> ZUT (BMO Eq Wt Utilities)</label></li></ul></div>
+            <div class="etf-group"><h3>Utilities</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XUT"> XUT (iShares Capped Utilities)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZUT"> ZUT (BMO Eq Wt Utilities)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZWU"> ZWU (BMO Cov Call Utils)</label></li><li class="etf-select-item"><label><input type="checkbox" value="HUTS"> HUTS (Hamilton Enh Utils)</label></li></ul></div>
             <div class="etf-group"><h3>Real Estate (REITs)</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XRE"> XRE (iShares Capped REIT)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZRE"> ZRE (BMO Eq Wt REITs)</label></li><li class="etf-select-item"><label><input type="checkbox" value="VRE"> VRE (Vanguard Capped REIT)</label></li></ul></div>
             <div class="etf-group"><h3>Healthcare</h3><ul class="etf-selection-list"><li class="etf-select-item"><label><input type="checkbox" value="XHC"> XHC (iShares Capped Health)</label></li><li class="etf-select-item"><label><input type="checkbox" value="ZUH"> ZUH (BMO Eq Wt US Health)</label></li></ul></div>
             <p id="selection-message"></p>
@@ -112,10 +117,11 @@
             </p>
              <ul>
                 <li><strong>Concentration Risk:</strong> This is the biggest factor. Sector ETFs concentrate investment in one industry, making them inherently riskier and more volatile than broad market ETFs. Performance is tied to that sector's specific economic conditions, regulations, and cycles.</li>
-                <li><strong>Geographic Focus:</strong> Some sector ETFs focus purely on Canadian companies (e.g., XIT, ZEB), while others offer global or US exposure from a Canadian listing (e.g., TEC, ZUH, ZMT). Understand the geographic scope.</li>
-                <li><strong>Index Methodology:</strong> Check if the ETF is market-cap weighted (larger companies have more influence, like XFN, XEG) or equal weighted (gives smaller companies the same influence as larger ones, like ZEB, ZEO). Some may track specific sub-sectors (e.g., XGD for gold miners within Materials).</li>
-                 <li><strong>MERs:</strong> Sector ETF MERs vary more widely than broad index or asset allocation ETFs, often ranging from ~0.30% to over 0.60%. Compare costs carefully.</li>
-                 <li><strong>Specific Structures:</strong> Look out for swap-based structures (like HXT, HXE, HXQ) for potential tax efficiency but added complexity/risk, or leveraged ETFs (like HCAL) which amplify returns and risks.</li>
+                <li><strong>Geographic Focus:</strong> Some sector ETFs focus purely on Canadian companies (e.g., XIT, ZEB, XRE), while others offer global or US exposure from a Canadian listing (e.g., TEC, ZUH, ZMT). Understand the geographic scope.</li>
+                <li><strong>Index Methodology:</strong> Check if the ETF is market-cap weighted (larger companies have more influence, like XFN, XEG) or equal weighted (gives smaller companies the same influence as larger ones, like ZEB, ZEO, ZUT). Some may track specific sub-sectors (e.g., XGD for gold miners within Materials).</li>
+                 <li><strong>Strategy (Covered Call / Leverage):</strong> Some sector ETFs employ options strategies like covered calls (e.g., ZWB, ZWU, ZWE) to generate higher yield, which caps potential upside. Others use leverage (e.g., HCAL, HFIN, HENG, HUTS) to amplify returns (and losses), significantly increasing risk. Understand these strategies before investing.</li>
+                 <li><strong>MERs:</strong> Sector ETF MERs vary more widely than broad index or asset allocation ETFs, often ranging from ~0.30% to over 0.70%, especially for leveraged or covered call strategies. Compare costs carefully.</li>
+                 <li><strong>Specific Structures:</strong> Look out for swap-based structures (like HXT, HXE, HXQ) for potential tax efficiency but added complexity/risk, or leveraged ETFs which amplify returns and risks.</li>
                 <li><strong>Overlap:</strong> Be mindful of potential overlap if holding multiple sector ETFs or sector ETFs alongside broad market funds.</li>
             </ul>
              <p>
@@ -124,12 +130,12 @@
          </section>
 
          <p class="disclaimer">
-             <strong>Disclaimer:</strong> Data requires verification. Information is for informational purposes only and not financial advice. Verify all details with official provider documents before investing. Data As Of: March 28, 2025.
+             <strong>Disclaimer:</strong> Data requires verification. Information is for informational purposes only and not financial advice. Verify all details with official provider documents before investing. Data As Of: March 29, 2025.
         </p>
     </main>
 
      <footer>
-         <p>&copy; ETFsCanada.ca 2025 | Data manually collected, verify with source.</p>
+         <p>© ETFsCanada.ca 2025 | Data manually collected, verify with source.</p>
     </footer>
 
     <script src="script.js"></script>

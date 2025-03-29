@@ -6,6 +6,7 @@
     <title>Compare Fixed Income (Bond) ETFs in Canada | ETFsCanada.ca</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -57,8 +58,12 @@
         </div>
     </header>
 
-      <nav class="sticky-nav">
-         <ul>
+    <nav class="sticky-nav">
+        <button class="mobile-nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+            <i class="fas fa-bars open-icon"></i>
+            <i class="fas fa-times close-icon"></i>
+        </button>
+         <ul id="primary-navigation">
              <li><a href="index.html">Home</a></li>
             <li><a href="all-in-one-etfs.html">All-in-One</a></li>
             <li><a href="regions.html">Regions</a></li>
@@ -75,15 +80,15 @@
         <section id="intro">
             <h2>Understanding Fixed Income ETFs</h2>
             <p>
-                Fixed income ETFs primarily invest in bonds, which represent loans made to governments or corporations. They play a key role in many portfolios by providing potential income through interest payments and generally offering lower volatility compared to stocks, acting as a stabilizer.
+                Fixed income ETFs primarily invest in bonds, which represent loans made to governments or corporations. They play a key role in many portfolios by providing potential income through interest payments and generally offering lower volatility compared to stocks, acting as a stabilizer. Cash alternative ETFs, like High Interest Savings ETFs, are also included here as they serve a similar capital preservation role.
             </p>
              <p>
                  Key concepts to understand when comparing bond ETFs include:
             </p>
             <ul>
-                <li><strong><span class="tooltip" data-tooltip="Yield to Maturity (YTM) is the estimated total annual return if the bond is held until it matures, considering its current price, coupon payments, and face value. Distribution Yield reflects past payments. YTM is generally a better indicator for future expectations, but verify which yield is reported.">Yield:</span></strong> The return an investor can expect. Often quoted as Yield to Maturity (YTM) or Distribution Yield.</li>
-                <li><strong><span class="tooltip" data-tooltip="Duration (measured in years) indicates how much a bond ETF's price is likely to change for a 1% change in interest rates. Higher duration means higher sensitivity (more price fluctuation).">Duration:</span></strong> Measures sensitivity to interest rate changes. Higher duration means the price will fall more if rates rise (and rise more if rates fall).</li>
-                <li><strong><span class="tooltip" data-tooltip="Credit Quality reflects the borrower's creditworthiness (likelihood of repaying). Ratings range from AAA (highest) down to B or below (junk/high-yield). Lower quality means higher default risk but usually higher yield.">Credit Quality:</span></strong> The creditworthiness of the bond issuers (e.g., AAA, AA, A, BBB). Lower quality means higher risk but potentially higher yield.</li>
+                <li><strong><span class="tooltip" data-tooltip="Yield to Maturity (YTM) is the estimated total annual return if the bond is held until it matures, considering its current price, coupon payments, and face value. Distribution Yield reflects past payments. YTM is generally a better indicator for future expectations, but verify which yield is reported.">Yield:</span></strong> The return an investor can expect. Often quoted as Yield to Maturity (YTM) or Distribution Yield. High Interest Savings ETFs have variable yields based on current rates.</li>
+                <li><strong><span class="tooltip" data-tooltip="Duration (measured in years) indicates how much a bond ETF's price is likely to change for a 1% change in interest rates. Higher duration means higher sensitivity (more price fluctuation).">Duration:</span></strong> Measures sensitivity to interest rate changes. Higher duration means the price will fall more if rates rise (and rise more if rates fall). Cash alternatives have near-zero duration.</li>
+                <li><strong><span class="tooltip" data-tooltip="Credit Quality reflects the borrower's creditworthiness (likelihood of repaying). Ratings range from AAA (highest) down to B or below (junk/high-yield). Lower quality means higher default risk but usually higher yield.">Credit Quality:</span></strong> The creditworthiness of the bond issuers (e.g., AAA, AA, A, BBB). Lower quality means higher risk but potentially higher yield. High Interest Savings ETFs hold deposits at major banks.</li>
                  <li><strong>Maturity:</strong> The length of time until the bonds in the portfolio are due to be repaid. Average maturity influences both yield and duration.</li>
             </ul>
             <p>
@@ -94,13 +99,14 @@
 
         <section id="etf-selector">
             <h2>Select Canadian-Listed Fixed Income ETFs to Compare (Max 3)</h2>
-            <p>Choose from ETFs covering different types of bonds.</p>
+            <p>Choose from ETFs covering different types of bonds and cash alternatives.</p>
             <div class="etf-group">
                 <h3>Aggregate Bond (Broad Market)</h3>
                 <ul class="etf-selection-list">
                     <li class="etf-select-item"><label><input type="checkbox" value="VAB"> VAB (Vanguard)</label></li>
                     <li class="etf-select-item"><label><input type="checkbox" value="XBB"> XBB (iShares)</label></li>
                     <li class="etf-select-item"><label><input type="checkbox" value="ZAG"> ZAG (BMO)</label></li>
+                    <li class="etf-select-item"><label><input type="checkbox" value="ZDB"> ZDB (BMO Discount Bond)</label></li>
                 </ul>
             </div>
              <div class="etf-group">
@@ -137,8 +143,8 @@
              <div class="etf-group">
                 <h3>High Yield Bond</h3>
                 <ul class="etf-selection-list">
-                     <li class="etf-select-item"><label><input type="checkbox" value="XHY"> XHY (iShares)</label></li>
-                     <li class="etf-select-item"><label><input type="checkbox" value="ZHY"> ZHY (BMO)</label></li>
+                     <li class="etf-select-item"><label><input type="checkbox" value="XHY"> XHY (iShares Cdn HY)</label></li>
+                     <li class="etf-select-item"><label><input type="checkbox" value="ZHY"> ZHY (BMO US HY Hedged)</label></li>
                  </ul>
             </div>
             <div class="etf-group">
@@ -146,7 +152,17 @@
                 <ul class="etf-selection-list">
                      <li class="etf-select-item"><label><input type="checkbox" value="VBG"> VBG (Vanguard)</label></li>
                      <li class="etf-select-item"><label><input type="checkbox" value="XAGG"> XAGG (iShares)</label></li>
-                     <li class="etf-select-item"><label><input type="checkbox" value="ZG G"> ZG G (BMO)</label></li> </ul>
+                     <li class="etf-select-item"><label><input type="checkbox" value="ZGGG"> ZGGG (BMO)</label></li> <!-- Changed from ZG G -->
+                </ul>
+            </div>
+             <div class="etf-group">
+                <h3>High Interest Savings / Cash Alt</h3>
+                <ul class="etf-selection-list">
+                     <li class="etf-select-item"><label><input type="checkbox" value="CASH"> CASH (Horizons)</label></li>
+                     <li class="etf-select-item"><label><input type="checkbox" value="HISA"> HISA (Evolve)</label></li>
+                     <li class="etf-select-item"><label><input type="checkbox" value="PSA"> PSA (Purpose)</label></li>
+                     <li class="etf-select-item"><label><input type="checkbox" value="NSAV"> NSAV (Ninepoint)</label></li>
+                 </ul>
             </div>
             <p id="selection-message" style="display: none;"></p>
         </section>
@@ -159,14 +175,15 @@
 
          <section id="summary">
              <h2>Key Differences & Considerations (Fixed Income ETFs)</h2>
-             <p>Choosing the right bond ETF involves balancing several factors:</p>
+             <p>Choosing the right fixed income or cash alternative ETF involves balancing several factors:</p>
              <ul>
-                <li><strong>Interest Rate Risk (Duration):</strong> Longer <span class="tooltip" data-tooltip="Duration measures sensitivity to interest rate changes. Higher duration = more price change for a given rate change.">duration</span> ETFs (like long government bonds) offer potentially higher yields but their prices fall much more when interest rates rise. Short-term bond ETFs have low duration and less price risk, but lower yields. Aggregate bond ETFs have moderate duration. Match duration to your interest rate outlook and risk tolerance.</li>
-                <li><strong>Credit Risk (Credit Quality):</strong> Government bonds (Federal) have minimal default risk but lower yields. Investment-grade corporate bonds offer higher yields but carry some default risk. High-yield ("junk") bonds offer the highest yields but come with significant default risk, behaving more like equities sometimes. Aggregate funds blend government and corporate bonds. Real Return Bonds have minimal credit risk (government issued).</li>
-                <li><strong>Yield vs. Safety:</strong> Generally, higher yield comes with higher risk (either longer duration or lower credit quality). Understand this trade-off. <span class="tooltip" data-tooltip="Yield to Maturity (YTM) estimates future return if held to maturity; Distribution Yield reflects past payments. Prefer YTM for comparison if available.">Yield to Maturity (YTM)</span> is usually a better comparison metric than distribution yield.</li>
+                <li><strong>Interest Rate Risk (Duration):</strong> Longer <span class="tooltip" data-tooltip="Duration measures sensitivity to interest rate changes. Higher duration = more price change for a given rate change.">duration</span> ETFs (like long government bonds) offer potentially higher yields but their prices fall much more when interest rates rise. Short-term bond ETFs have low duration and less price risk, but lower yields. Aggregate bond ETFs have moderate duration. High Interest Savings ETFs have virtually zero duration risk. Match duration to your interest rate outlook and risk tolerance.</li>
+                <li><strong>Credit Risk (Credit Quality):</strong> Government bonds (Federal) have minimal default risk but lower yields. Investment-grade corporate bonds offer higher yields but carry some default risk. High-yield ("junk") bonds offer the highest yields but come with significant default risk, behaving more like equities sometimes. Aggregate funds blend government and corporate bonds. Real Return Bonds have minimal credit risk (government issued). High Interest Savings ETFs hold deposits at Schedule I Canadian banks, carrying minimal credit risk (often covered by CDIC insurance up to limits, per deposit).</li>
+                <li><strong>Yield vs. Safety:</strong> Generally, higher yield comes with higher risk (either longer duration or lower credit quality). Understand this trade-off. <span class="tooltip" data-tooltip="Yield to Maturity (YTM) estimates future return if held to maturity; Distribution Yield reflects past payments. Prefer YTM for comparison if available.">Yield to Maturity (YTM)</span> is usually a better comparison metric than distribution yield for bonds. High Interest Savings yields vary with market rates but offer high safety of principal.</li>
                 <li><strong>Inflation Protection (Real Return Bonds):</strong> <span class="tooltip" data-tooltip="Real Return Bonds (RRBs): Government bonds whose principal and/or interest payments are adjusted for inflation, protecting purchasing power.">RRBs</span> are designed to protect against unexpected inflation, but their market can be less liquid and yields are typically lower in non-inflationary periods.</li>
                  <li><strong>Diversification:</strong> Aggregate bond ETFs provide broad diversification across issuer types and maturities. Targeting specific types (like short-term or corporate) reduces diversification. Global bond ETFs add geographic diversification but involve currency hedging complexities and costs.</li>
-                <li><strong>Cost (<span class="tooltip" data-tooltip="Management Expense Ratio: Annual fee.">MER</span>):</strong> Fees matter, especially in the lower-return world of fixed income. Broad aggregate and government bond ETFs often have very low MERs, while specialized types like high-yield or global may be higher.</li>
+                 <li><strong>Tax Efficiency:</strong> Interest income is taxed at your marginal rate. Bond ETFs holding premium bonds distribute more interest; discount bond ETFs (like ZDB) may realize more return as capital gains (taxed lower), potentially beneficial in non-registered accounts. High Interest Savings ETF distributions are taxed as interest.</li>
+                <li><strong>Cost (<span class="tooltip" data-tooltip="Management Expense Ratio: Annual fee.">MER</span>):</strong> Fees matter, especially in the lower-return world of fixed income. Broad aggregate and government bond ETFs often have very low MERs. High Interest Savings ETFs have low MERs typically deducted from the gross yield. Specialized types like high-yield or global may be higher.</li>
             </ul>
              <p>Consider the role you want fixed income to play in your portfolio (e.g., capital preservation, income generation, diversification from equities) when selecting the appropriate type and specific ETF. Always check the ETF Facts document.</p>
          </section>

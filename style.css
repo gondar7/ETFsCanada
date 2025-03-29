@@ -213,3 +213,258 @@ footer a:hover { color: var(--accent-color); }
 @media (max-width: 768px) { body { font-size: 16px; } .hero { padding: 6rem 1rem 5rem 1rem; min-height: 50vh; } header.hero[style*="min-height: 30vh"] { min-height: auto; padding: 3rem 1rem; } header.hero[style*="min-height: 30vh"] h1 { font-size: 2.5rem; } header.hero[style*="min-height: 30vh"] p { font-size: 1rem; } .hero-content h1 { font-size: 2.8rem; } .hero-content p { font-size: 1.1rem; } nav ul li { margin: 0 5px; } nav ul li a { padding: 6px; font-size: 0.9rem;} main { margin: 2rem auto; padding: 0 1rem;} section { padding: 1.5rem; margin-bottom: 2.5rem;} section#intro { padding: 0;} section#summary { padding: 1rem 1.5rem;} h2 { font-size: 1.8rem; } .comparison-card { padding: 1rem 1.25rem;} .chart-wrapper { padding: 1rem;} #geo-comparison-chart-container .chart-container, #us-geo-comparison-chart-container .chart-container { height: 300px; } #sector-comparison-chart-container .chart-container, #us-sector-comparison-chart-container .chart-container { height: 300px; } .donation-options { gap: 1rem; } }
 @media (max-width: 576px) { nav ul li { display: block; margin: 8px 0; } .category-links { grid-template-columns: 1fr; gap: 1rem; } .hero { padding: 5rem 1rem 4rem 1rem; } .hero-content h1 { font-size: 2.4rem; } header.hero[style*="min-height: 30vh"] h1 { font-size: 2rem; } .etf-selection-list { justify-content: center;} .comparison-container { grid-template-columns: 1fr; } #mer-comparison-chart-container .chart-container, #us-mer-comparison-chart-container .chart-container { height: 180px; } #geo-comparison-chart-container .chart-container, #us-geo-comparison-chart-container .chart-container { height: 280px; } #sector-comparison-chart-container .chart-container, #us-sector-comparison-chart-container .chart-container { height: 280px; } .donation-option-item { flex-basis: calc(50% - 0.5rem); } }
 @media (max-width: 400px) { .donation-option-item { flex-basis: 100%; } }
+
+/* --- General Enhancements --- */
+body {
+    /* Optional: Add a very subtle background pattern or texture */
+    /* background-image: url('path/to/subtle-pattern.png'); */
+    background-color: #fdfdfd; /* Slightly off-white */
+}
+
+.site-main { /* Wrapper for main content */
+    max-width: var(--container-max-width);
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+}
+
+/* Adjust section spacing and look */
+section {
+    margin-bottom: 4rem; /* Increase space between sections */
+    padding: 2rem 2.5rem; /* Consistent padding */
+    background-color: var(--background-color);
+    border-radius: 12px; /* Slightly more rounded */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07); /* Softer shadow */
+    border: 1px solid var(--border-color); /* Subtle border */
+}
+section#intro, /* Keep intro sections plain */
+section#welcome {
+    box-shadow: none; padding: 0; margin-bottom: 2.5rem; border: none; background-color: transparent;
+}
+section#summary { /* Keep summary distinct */
+    box-shadow: none; margin-top: 3rem; background-color: var(--light-grey); border-radius: 8px; padding: 1.5rem 2rem; border: 1px solid var(--border-color);
+}
+
+/* Improve heading spacing */
+h2 {
+    margin-bottom: 1.5rem; /* More space below H2 */
+}
+section > p:first-of-type { /* More space after section title if p follows */
+    margin-top: 1rem;
+}
+
+/* --- Welcome Section --- */
+.welcome-section p {
+    font-size: 1.05rem; /* Slightly larger text */
+    max-width: 800px; /* Limit line length for readability */
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+.welcome-section p + p { /* Add space between paragraphs */
+    margin-top: 1.2rem;
+}
+.welcome-section .wip-notice {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* --- Category Section --- */
+.categories-section h2 {
+    text-align: center;
+    border-bottom: none; /* Remove border from this h2 */
+    margin-bottom: 0.5rem;
+}
+.categories-section > p { /* Center the intro text */
+    text-align: center;
+    color: #555;
+    margin-bottom: 2.5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.category-links {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Adjust min size */
+    gap: 1.8rem; /* Increase gap */
+}
+.category-link {
+    padding: 1.8rem 1rem; /* Adjust padding */
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px; /* Ensure consistent height */
+}
+.category-icon {
+    font-size: 2rem; /* Make icons larger */
+    margin-bottom: 0.8rem;
+    color: var(--secondary-color);
+    transition: color 0.3s ease;
+}
+.category-link:hover .category-icon,
+.category-link:focus .category-icon {
+     color: #ffffff; /* Change icon color on hover */
+}
+
+/* --- Support Section --- */
+.support-section {
+    background-color: var(--light-grey); /* Keep distinct background */
+}
+
+/* --- Disclaimer / Data Date Overlap Fix --- */
+.data-date {
+    font-size: 0.85rem; /* Slightly smaller */
+    color: #5a606b;
+    background-color: #eef2f7; /* Slightly different background */
+    border-left: 4px solid var(--secondary-color);
+    padding: 10px 15px;
+    margin: 0 auto 1.5rem auto; /* Center and add bottom margin */
+    border-radius: 4px;
+    max-width: var(--container-max-width); /* Match main container width */
+    box-sizing: border-box; /* Include padding in width */
+    text-align: center;
+}
+.disclaimer {
+    font-size: 0.85rem;
+    color: #5a606b;
+    background-color: #f8f9fa; /* Different background for disclaimer */
+    border-left: 4px solid #6c757d; /* Grey border */
+    padding: 15px 20px;
+    margin: 1.5rem auto 2rem auto; /* Center and adjust margins */
+    border-radius: 4px;
+    max-width: var(--container-max-width);
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* --- Sticky Nav & Mobile Menu --- */
+nav.sticky-nav {
+    padding: 0.5rem 1.5rem; /* Adjust padding */
+    display: flex; /* Use flexbox for alignment */
+    justify-content: space-between; /* Space items */
+    align-items: center;
+}
+
+/* Hide full menu list by default */
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex; /* Use flex for desktop layout */
+    gap: 5px; /* Small gap between items on desktop */
+}
+
+nav ul li {
+    display: inline-block; /* Keep for desktop */
+    margin: 0; /* Remove default margins */
+}
+nav ul li a {
+    padding: 10px 15px; /* Increase padding */
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+nav ul li a::after { /* Optional: Keep hover effect */
+    content: ''; position: absolute; width: 0; height: 2px; display: block; margin-top: 4px; right: 0; background: var(--secondary-color); transition: width 0.3s ease; -webkit-transition: width 0.3s ease; bottom: 5px; /* Adjust position */
+}
+nav ul li a:hover::after { width: 100%; left: 0; }
+
+
+/* Mobile Nav Toggle Button */
+.mobile-nav-toggle {
+    display: none; /* Hidden on desktop */
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 9999; /* Ensure it's on top */
+}
+.mobile-nav-toggle i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.mobile-nav-toggle .close-icon { display: none; }
+.mobile-nav-toggle[aria-expanded="true"] .close-icon { display: block; }
+.mobile-nav-toggle[aria-expanded="true"] .open-icon { display: none; }
+
+/* --- Responsive Adjustments for Nav --- */
+@media (max-width: 992px) { /* Adjust breakpoint as needed */
+    nav ul {
+        display: none; /* Hide the desktop nav list */
+        position: absolute;
+        top: 100%; /* Position below the nav bar */
+        left: 0;
+        right: 0;
+        background-color: #ffffff;
+        flex-direction: column; /* Stack items vertically */
+        padding: 1rem 0;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        border-top: 1px solid var(--border-color);
+        z-index: 9990; /* Below toggle button but above content */
+    }
+
+    /* Show the list when toggled */
+    nav ul.nav-open {
+        display: flex;
+    }
+
+    nav ul li {
+        display: block; /* Make list items block level */
+        margin: 0;
+        width: 100%;
+        text-align: center; /* Center text */
+    }
+    nav ul li a {
+        display: block; /* Make links fill the list item */
+        padding: 1rem 1.5rem; /* Generous padding for tapping */
+        border-bottom: 1px solid var(--light-grey); /* Separator */
+        font-size: 1rem;
+    }
+    nav ul li:last-child a {
+        border-bottom: none; /* Remove border from last item */
+    }
+     nav ul li a::after { /* Hide underline effect on mobile */
+        display: none;
+    }
+     nav ul li a:hover, nav ul li a:focus {
+        background-color: var(--light-grey); /* Add hover background */
+        color: var(--primary-color);
+    }
+
+    .mobile-nav-toggle {
+        display: block; /* Show the hamburger button */
+    }
+
+    /* Adjust main content padding if nav height changes */
+    /* body { padding-top: 60px; } /* Example if nav height is fixed */
+}
+
+/* Further refinements for smaller screens */
+@media (max-width: 768px) {
+    .site-main { margin: 2rem auto; }
+    section { padding: 1.5rem; margin-bottom: 3rem; }
+    .category-links { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
+    .category-link { min-height: 100px; padding: 1.2rem 0.8rem;}
+    .category-icon { font-size: 1.8rem; margin-bottom: 0.6rem; }
+    h1 { font-size: 3rem; }
+    h2 { font-size: 1.8rem; margin-bottom: 1rem; }
+    .welcome-section p { font-size: 1rem; }
+     /* Adjust disclaimer/data-date margins if needed */
+    .data-date { margin-bottom: 1rem; padding: 8px 12px; }
+    .disclaimer { margin: 1rem auto 1.5rem auto; padding: 10px 15px; }
+}
+@media (max-width: 576px) {
+    .hero-content h1 { font-size: 2.4rem; }
+    .hero-content p { font-size: 1.1rem; }
+    .cta-button { padding: 12px 28px; font-size: 1rem;}
+    .category-links { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+    nav.sticky-nav { padding: 0.5rem 1rem; }
+    section { padding: 1rem 1.2rem; }
+     .donation-option-item { flex-basis: calc(50% - 0.5rem); }
+}
+ @media (max-width: 400px) {
+    .category-links { grid-template-columns: 1fr 1fr; } /* Two columns on very small */
+     .donation-option-item { flex-basis: 100%; }
+ }

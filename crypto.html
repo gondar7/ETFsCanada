@@ -6,6 +6,7 @@
     <title>Compare Crypto ETFs in Canada | ETFsCanada.ca</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -60,8 +61,12 @@
         </div>
     </header>
 
-      <nav class="sticky-nav">
-         <ul>
+    <nav class="sticky-nav">
+        <button class="mobile-nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+            <i class="fas fa-bars open-icon"></i>
+            <i class="fas fa-times close-icon"></i>
+        </button>
+         <ul id="primary-navigation">
              <li><a href="index.html">Home</a></li>
             <li><a href="all-in-one-etfs.html">All-in-One</a></li>
             <li><a href="regions.html">Regions</a></li>
@@ -69,7 +74,7 @@
             <li><a href="fixed-income.html">Fixed Income</a></li>
             <li><a href="factor.html">Factor</a></li>
             <li><a href="thematic.html">Thematic</a></li>
-            <li><a href="commodities.html">Commodities</a></li>
+            <li><a href="commodities.html">Commodity</a></li>
             <li><a href="crypto.html">Crypto</a></li>
         </ul>
     </nav>

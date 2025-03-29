@@ -6,6 +6,7 @@
     <title>Compare Thematic ETFs in Canada | ETFsCanada.ca</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -57,8 +58,12 @@
         </div>
     </header>
 
-      <nav class="sticky-nav">
-         <ul>
+    <nav class="sticky-nav">
+        <button class="mobile-nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+            <i class="fas fa-bars open-icon"></i>
+            <i class="fas fa-times close-icon"></i>
+        </button>
+         <ul id="primary-navigation">
              <li><a href="index.html">Home</a></li>
             <li><a href="all-in-one-etfs.html">All-in-One</a></li>
             <li><a href="regions.html">Regions</a></li>
@@ -75,16 +80,16 @@
         <section id="intro">
             <h2>Understanding Thematic Investing</h2>
             <p>
-                Thematic ETFs aim to capture growth opportunities by investing in companies expected to benefit from long-term, structural trends known as <span class="tooltip" data-tooltip="Megatrends: Profound, long-term shifts in society, economy, or environment (e.g., AI, aging population, climate change).">megatrends</span>. These can range from technological breakthroughs (like AI, robotics, genomics) to environmental shifts (clean energy, carbon reduction) or societal changes (future of food, longevity).
+                Thematic ETFs aim to capture growth opportunities by investing in companies expected to benefit from long-term, structural trends known as <span class="tooltip" data-tooltip="Megatrends: Profound, long-term shifts in society, economy, or environment (e.g., AI, aging population, climate change).">megatrends</span>. These can range from technological breakthroughs (like AI, robotics, genomics) to environmental shifts (clean energy, carbon reduction) or societal changes (future of food, longevity). Covered call strategies focused on specific themes are also included here.
             </p>
              <p>
                  Unlike traditional sector or broad market ETFs, thematic funds often have very concentrated portfolios focused on specific niches. They may follow custom-built indexes or be actively managed.
              </p>
             <p>
-                <strong>Potential vs. Risks:</strong> The appeal lies in potentially high growth if the chosen theme plays out successfully. However, thematic investing carries significant risks:
+                <strong>Potential vs. Risks:</strong> The appeal lies in potentially high growth if the chosen theme plays out successfully, or enhanced income for covered call strategies. However, thematic investing carries significant risks:
             </p>
             <ul>
-                <li><strong>High Volatility & <span class="tooltip" data-tooltip="Concentration Risk: The risk of amplified losses due to having a large portion of investments in a single company, industry, or theme.">Concentration Risk</span>:</strong> Performance is heavily tied to the success of a narrow theme and often a small number of companies.</li>
+                <li><strong>High Volatility & <span class="tooltip" data-tooltip="Concentration Risk: The risk of amplified losses due to having a large portion of investments in a single company, industry, or theme.">Concentration Risk</span>:</strong> Performance is heavily tied to the success of a narrow theme and often a small number of companies. Covered call strategies cap upside potential.</li>
                 <li><strong>Theme Persistence Risk:</strong> A theme might be hyped but fail to materialize as expected, or it could become obsolete due to new innovations.</li>
                 <li><strong>Valuation Risk:</strong> Popular themes can lead to companies trading at very high valuations, increasing downside potential.</li>
                 <li><strong>High <span class="tooltip" data-tooltip="Management Expense Ratio: Annual fee. Thematic ETFs often have much higher MERs than broad index funds.">MERs</span>:</strong> Fees are often considerably higher than broad market or even basic sector ETFs.</li>
@@ -131,6 +136,15 @@
                     <li class="etf-select-item"><label><input type="checkbox" value="BATT"> BATT (Evolve)</label></li>
                  </ul>
             </div>
+             <div class="etf-group">
+                <h3>Covered Call / Enhanced Yield</h3>
+                <ul class="etf-selection-list">
+                    <li class="etf-select-item"><label><input type="checkbox" value="HMAX"> HMAX (Hamilton MultiSector CC)</label></li>
+                    <li class="etf-select-item"><label><input type="checkbox" value="UMAX"> UMAX (Hamilton Utilities CC)</label></li>
+                    <li class="etf-select-item"><label><input type="checkbox" value="QMAX"> QMAX (Hamilton Tech CC)</label></li>
+                    <!-- Add others like ZWB, ZWU, ZWE here too if desired, or keep them only in Sectors -->
+                </ul>
+            </div>
             <p id="selection-message" style="display: none;"></p>
         </section>
 
@@ -145,7 +159,8 @@
             <p>Comparing thematic ETFs requires extra diligence due to their specialized nature:</p>
             <ul>
                 <li><strong>Theme Definition & Purity:</strong> How strictly does the ETF adhere to the theme? Some may include tangential companies. Check the index methodology (if any) or active manager's strategy. Does it focus on pure-play companies or enablers?</li>
-                 <li><strong>High <span class="tooltip" data-tooltip="Management Expense Ratio: Annual fee.">MER</span>s:</strong> Thematic ETFs often carry significantly higher fees than broad market or even sector funds (e.g., 0.40% to 0.75%+ is common). High fees create a hurdle for outperformance.</li>
+                 <li><strong>Strategy (Growth vs. Covered Call):</strong> Is the ETF aiming for capital growth by holding thematic stocks (e.g., ZAUT, RBOT), or is it using covered calls on thematic stocks (e.g., HMAX, UMAX, QMAX) to generate higher income at the cost of capping upside potential?</li>
+                 <li><strong>High <span class="tooltip" data-tooltip="Management Expense Ratio: Annual fee.">MER</span>s:</strong> Thematic ETFs often carry significantly higher fees than broad market or even sector funds (e.g., 0.40% to 0.85%+ is common). High fees create a hurdle for outperformance.</li>
                  <li><strong>Concentration & Holdings Overlap:</strong> These ETFs are usually highly concentrated in a small number of stocks. The top 10 holdings can make up a very large percentage of the fund. If holding multiple thematic ETFs, check for significant overlap in underlying stocks.</li>
                  <li><strong>Geographic Exposure:</strong> Most thematic ETFs have a global or heavy US focus, as many innovative companies are based there. Understand the geographic tilt.</li>
                  <li><strong><span class="tooltip" data-tooltip="Assets Under Management: Total fund value. Lower AUM ETFs might have wider bid-ask spreads and potentially higher risk of closure.">AUM</span> & Trading Volume:</strong> Many thematic ETFs are smaller and less traded than broad market funds. Very low AUM can sometimes indicate a risk of the fund eventually closing. Check trading volume for liquidity.</li>
